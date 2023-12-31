@@ -56,9 +56,6 @@ public class Chessboard extends JFrame implements ActionListener {
     Pawn bPawn8 = new Pawn("♙", 8, 7, 6, peiceArr, "w");
 
 
-
-    // code not made by me
-
     public Chessboard(){
 
         frame = new JFrame("Chess Game");
@@ -165,24 +162,63 @@ public class Chessboard extends JFrame implements ActionListener {
 
                     }
                 }else {
-                    if (peice.validMove(oldClickedCol, oldClickedRow, clickedCol, clickedRow, boardState)) {
+                    if (peice.getcolor()=="♚"&&!wKing.kingHasmoved&&(clickedCol==2||clickedCol==6)){
+                        if (wKing.validCastle(oldClickedCol, oldClickedRow, clickedCol, clickedRow, boardState)){
+                            peice.MovePiece(clickedCol, clickedRow);
+                            updateBoardState(peice.getxPos(), peice.getyPos(), oldClickedCol, oldClickedRow, peice);
+                            if (peice.getxPos()==2&&peice.getyPos()==0){
+                                wRook1.MovePiece(3, 0);
+                                updateBoardState(wRook1.getxPos(), wRook1.getyPos(), 0, 0, wRook1);
 
-                        peice.MovePiece(clickedCol, clickedRow);
-                        updateBoardState(peice.getxPos(),peice.getyPos(),oldClickedCol, oldClickedRow, peice);
-                        if (playerTurn.equals("w")){
-                            playerTurn = "b";
-                        }else {
-                            playerTurn = "w";
+                            } else if (peice.getxPos()==6&&peice.getyPos()==0) {
+                                wRook2.MovePiece(5, 0);
+                                updateBoardState(wRook2.getxPos(), wRook2.getyPos(), 7, 0, wRook2);
+                            }
+                            if (playerTurn.equals("w")) {
+                                playerTurn = "b";
+                            } else {
+                                playerTurn = "w";
+                            }
+                            peice = null;
                         }
-                        System.out.println("turn = "+playerTurn);
-                        System.out.println(peice.xPos + " " + peice.yPos + peice.getCOLOR());
+                    } else if (peice.getcolor()=="♔"&&!bKing.kingHasmoved&&(clickedCol==2||clickedCol==6)) {
+                        if (bKing.validCastle(oldClickedCol, oldClickedRow, clickedCol, clickedRow, boardState)){
+                            peice.MovePiece(clickedCol, clickedRow);
+                            updateBoardState(peice.getxPos(), peice.getyPos(), oldClickedCol, oldClickedRow, peice);
+                            if (peice.getxPos()==2&&peice.getyPos()==7){
+                                bRook1.MovePiece(3, 7);
+                                updateBoardState(bRook1.getxPos(), bRook1.getyPos(), 0, 7, bRook1);
 
-                        peice=null;
-                    }else{
-                        JOptionPane.showMessageDialog(this, "Illegal move", "Error", JOptionPane.ERROR_MESSAGE);
+                            } else if (peice.getxPos()==6&&peice.getyPos()==7) {
+                                bRook2.MovePiece(5, 7);
+                                updateBoardState(bRook2.getxPos(), bRook2.getyPos(), 7, 7, bRook2);
+                            }
+                            if (playerTurn.equals("w")) {
+                                playerTurn = "b";
+                            } else {
+                                playerTurn = "w";
+                            }
+                            peice = null;
+                        }
+                    }else {
+                        if (peice.validMove(oldClickedCol, oldClickedRow, clickedCol, clickedRow, boardState)) {
 
+                            peice.MovePiece(clickedCol, clickedRow);
+                            updateBoardState(peice.getxPos(), peice.getyPos(), oldClickedCol, oldClickedRow, peice);
+                            if (playerTurn.equals("w")) {
+                                playerTurn = "b";
+                            } else {
+                                playerTurn = "w";
+                            }
+                            System.out.println("turn = " + playerTurn);
+                            System.out.println(peice.xPos + " " + peice.yPos + peice.getCOLOR());
+
+                            peice = null;
+                        } else {
+                            JOptionPane.showMessageDialog(this, "Illegal move", "Error", JOptionPane.ERROR_MESSAGE);
+
+                        }
                     }
-
                 }
             }
         } catch (Exception ex) {
