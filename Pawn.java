@@ -7,25 +7,7 @@ public class Pawn extends Peice {
         color = c;
     }
 
-    @Override
-    public void skroinkPeices(Peice[][] pA) {
-        peiceArr = pA;
-    }
 
-    public void checkShouldRender(int x, int y) {
-        if (x < 0 || y < 0)
-            return;
-
-        if (!(peiceArr[x][y].getColor().equals(color))) {
-            // shouldRender = false;
-        }
-    }
-
-    public boolean getShouldRender() {
-        return shouldRender;
-    }
-
-    boolean hasntMoved = true;
 
     // sees if a pawn hasn't moved, if it has it *can* move 2 squares in the direction of its color and otherwise only 1
     @Override
