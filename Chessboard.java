@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 
 public class Chessboard extends JFrame implements ActionListener {
     Peice peice;
+    Peice tempPawn;
     Peice deletedPeice;
     String playerTurn = "w";
     int oldClickedRow;
@@ -18,6 +19,7 @@ public class Chessboard extends JFrame implements ActionListener {
     private JFrame frame;
     private JButton[][] squares;
     private String[][] boardState;
+    Queen q1;
 
     Rook wRook1 = new Rook("♜", 1, 0, 0, peiceArr, "b");
     Knight wKnight1 = new Knight("♞", 1, 1, 0, peiceArr, "b");
@@ -28,14 +30,14 @@ public class Chessboard extends JFrame implements ActionListener {
     Knight wKnight2 = new Knight("♞", 2, 6, 0, peiceArr, "b");
     Rook wRook2 = new Rook("♜", 2, 7, 0, peiceArr, "b");
 
-    Pawn wPawn1 = new Pawn("♟", 1, 0, 1, peiceArr, "b");
-    Pawn wPawn2 = new Pawn("♟", 2, 1, 1, peiceArr, "b");
-    Pawn wPawn3 = new Pawn("♟", 3, 2, 1, peiceArr, "b");
-    Pawn wPawn4 = new Pawn("♟", 4, 3, 1, peiceArr, "b");
-    Pawn wPawn5 = new Pawn("♟", 5, 4, 1, peiceArr, "b");
-    Pawn wPawn6 = new Pawn("♟", 6, 5, 1, peiceArr, "b");
-    Pawn wPawn7 = new Pawn("♟", 7, 6, 1, peiceArr, "b");
-    Pawn wPawn8 = new Pawn("♟", 8, 7, 1, peiceArr, "b");
+    Peice wPawn1 = new Pawn("♟", 1, 0, 1, peiceArr, "b");
+    Peice wPawn2 = new Pawn("♟", 2, 1, 1, peiceArr, "b");
+    Peice wPawn3 = new Pawn("♟", 3, 2, 1, peiceArr, "b");
+    Peice wPawn4 = new Pawn("♟", 4, 3, 1, peiceArr, "b");
+    Peice wPawn5 = new Pawn("♟", 5, 4, 1, peiceArr, "b");
+    Peice wPawn6 = new Pawn("♟", 6, 5, 1, peiceArr, "b");
+    Peice wPawn7 = new Pawn("♟", 7, 6, 1, peiceArr, "b");
+    Peice wPawn8 = new Pawn("♟", 8, 7, 1, peiceArr, "b");
 
     Rook bRook1 = new Rook("♖", 1, 0, 7, peiceArr, "w");
     Knight bKnight1 = new Knight("♘", 1, 1, 7, peiceArr, "w");
@@ -46,14 +48,14 @@ public class Chessboard extends JFrame implements ActionListener {
     Knight bKnight2 = new Knight("♘", 2, 6, 7, peiceArr, "w");
     Rook bRook2 = new Rook("♖", 2, 7, 7, peiceArr, "w");
 
-    Pawn bPawn1 = new Pawn("♙", 1, 0, 6, peiceArr, "w");
-    Pawn bPawn2 = new Pawn("♙", 2, 1, 6, peiceArr, "w");
-    Pawn bPawn3 = new Pawn("♙", 3, 2, 6, peiceArr, "w");
-    Pawn bPawn4 = new Pawn("♙", 4, 3, 6, peiceArr, "w");
-    Pawn bPawn5 = new Pawn("♙", 5, 4, 6, peiceArr, "w");
-    Pawn bPawn6 = new Pawn("♙", 6, 5, 6, peiceArr, "w");
-    Pawn bPawn7 = new Pawn("♙", 7, 6, 6, peiceArr, "w");
-    Pawn bPawn8 = new Pawn("♙", 8, 7, 6, peiceArr, "w");
+    Peice bPawn1 = new Pawn("♙", 1, 0, 6, peiceArr, "w");
+    Peice bPawn2 = new Pawn("♙", 2, 1, 6, peiceArr, "w");
+    Peice bPawn3 = new Pawn("♙", 3, 2, 6, peiceArr, "w");
+    Peice bPawn4 = new Pawn("♙", 4, 3, 6, peiceArr, "w");
+    Peice bPawn5 = new Pawn("♙", 5, 4, 6, peiceArr, "w");
+    Peice bPawn6 = new Pawn("♙", 6, 5, 6, peiceArr, "w");
+    Peice bPawn7 = new Pawn("♙", 7, 6, 6, peiceArr, "w");
+    Peice bPawn8 = new Pawn("♙", 8, 7, 6, peiceArr, "w");
 
 
     public Chessboard(){
@@ -102,67 +104,353 @@ public class Chessboard extends JFrame implements ActionListener {
         squares[oldy][oldx].setText("");
 
     }
-    //    public void mouse(MouseEvent e){
-//        JButton clickedSquare = (JButton) e.getSource();
-//
-//    }
+
     public void actionPerformed(ActionEvent e) {
-        if (bKing.getcolor()==""){
-            JOptionPane.showMessageDialog(this, "Black WON!");
-        }
-        if (wKing.getcolor()==""){
-            JOptionPane.showMessageDialog(this, "White WON");
-        }
+
         JButton clickedSquare = (JButton) e.getSource();
         int clickedRow = -1;
         int clickedCol = -1;
 
-        outerLoop:
+        //two for loops to find the x and y or row and column
         for (int row = 0; row < BOARD_SIZE; row++) {
             for (int col = 0; col < BOARD_SIZE; col++) {
                 if (clickedSquare == squares[row][col]) {
                     clickedRow = row;
                     clickedCol = col;
-                    break outerLoop;
+                    break ;
                 }
             }
         }
 
         try {
-            if (clickedRow != -1 && clickedCol != -1) {
-                if (!boardState[clickedRow][clickedCol].isEmpty()) {
+            if (clickedRow != -1 && clickedCol != -1) {//if it is a valid input
+                if (!boardState[clickedRow][clickedCol].isEmpty()) {//if clicked square is not empty
 
-                    if (playerTurn==(selectPiece(clickedCol, clickedRow).getCOLOR())){
-                        oldClickedCol = clickedCol;
-                        oldClickedRow = clickedRow;
-                        peice = selectPiece(clickedCol, clickedRow);
-                        System.out.println("selected peice" + peice+" " + peice.xPos + " " + peice.yPos + peice.getCOLOR());
-                        System.out.println("turn = "+playerTurn);
+                    if (playerTurn==(selectPiece(clickedCol, clickedRow).getCOLOR())){//if it is also your turn
+                        oldClickedCol = clickedCol;//stores original position
+                        oldClickedRow = clickedRow;//stores original position
+                        peice = selectPiece(clickedCol, clickedRow);//this is the peice selected for movement
+                        System.out.println("selected peice is " + peice+" position is (" + peice.xPos + ", " + peice.yPos + ") piece color is " + peice.getCOLOR());//text to display what is happening in console
 
-                    } else if (playerTurn!=(deletedPeice=selectPiece(clickedCol, clickedRow)).getCOLOR()) {//there will be two pieces on the same square
+
+                    } else if (playerTurn!=(deletedPeice=selectPiece(clickedCol, clickedRow)).getCOLOR()) {//if there is a piece that is not of your color then that means you want to capture it
                         if (peice.validCapture(oldClickedCol, oldClickedRow, clickedCol, clickedRow, boardState)) {
+                            System.out.println("Captured "+deletedPeice+" with "+ peice + " at (" + peice.xPos + ", " + peice.yPos+")");
                             deletedPeice.yPos=(int)Math.random()*1000000;//the piece being captured will be not usable
                             deletedPeice.xPos=(int)Math.random()*1000000;//the piece being captured will be not usable
                             deletedPeice.color="";//the piece being captured will be not usable
                             deletedPeice=null;//the piece being captured will be not usable
                             peice.MovePiece(clickedCol, clickedRow);//this way there will be no confusion for the computer
-                            System.out.println(peice.color+ peice.xPos + " " + peice.yPos+peice.COLOR);
-                            updateBoardState(peice.getxPos(),peice.getyPos(),oldClickedCol, oldClickedRow, peice);
+
+                            updateBoardState(peice.getxPos(),peice.getyPos(),oldClickedCol, oldClickedRow, peice);//updates chessboard
+
                             if (playerTurn.equals("w")){
                                 playerTurn = "b";
                             }else {
                                 playerTurn = "w";
                             }
+                            if (peice instanceof Pawn&&peice.COLOR=="w"&&peice.getyPos()==0){//checks for promotion
+
+                                String[] options = {"Queen", "Rook", "Bishop", "Knight"};
+                                int choice = JOptionPane.showOptionDialog(null, "Choose a piece to promote to:", "Pawn Promotion",
+                                        JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+
+                                // Processing the user's choice
+                                switch (choice) {
+                                    case 0:
+                                    if (peice.peiceNumber == 1 && peice.COLOR == "w") {
+                                        bPawn1 = new Queen("♕", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn1.xPos, bPawn1.yPos, oldClickedCol, oldClickedRow, bPawn1);
+                                    } else if (peice.peiceNumber == 2 && peice.COLOR == "w") {
+                                        bPawn2 = new Queen("♕", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn2.xPos, bPawn2.yPos, oldClickedCol, oldClickedRow, bPawn2);
+                                    } else if (peice.peiceNumber == 3 && peice.COLOR == "w") {
+                                        bPawn3 = new Queen("♕", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn3.xPos, bPawn3.yPos, oldClickedCol, oldClickedRow, bPawn3);
+                                    } else if (peice.peiceNumber == 4 && peice.COLOR == "w") {
+                                        bPawn4 = new Queen("♕", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn4.xPos, bPawn4.yPos, oldClickedCol, oldClickedRow, bPawn4);
+                                    } else if (peice.peiceNumber == 5 && peice.COLOR == "w") {
+                                        bPawn5 = new Queen("♕", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn5.xPos, bPawn5.yPos, oldClickedCol, oldClickedRow, bPawn5);
+                                    } else if (peice.peiceNumber == 6 && peice.COLOR == "w") {
+                                        bPawn6 = new Queen("♕", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn6.xPos, bPawn6.yPos, oldClickedCol, oldClickedRow, bPawn6);
+                                    } else if (peice.peiceNumber == 7 && peice.COLOR == "w") {
+                                        bPawn7 = new Queen("♕", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn7.xPos, bPawn7.yPos, oldClickedCol, oldClickedRow, bPawn7);
+                                    } else if (peice.peiceNumber == 8 && peice.COLOR == "w") {
+                                        bPawn8 = new Queen("♕", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn8.xPos, bPawn8.yPos, oldClickedCol, oldClickedRow, bPawn8);
+                                    }
+
+                                    break;
+                                case 1:
+                                    if (peice.peiceNumber == 1 && peice.COLOR == "w") {
+                                        bPawn1 = new Rook("♖", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn1.xPos, bPawn1.yPos, oldClickedCol, oldClickedRow, bPawn1);
+                                    } else if (peice.peiceNumber == 2 && peice.COLOR == "w") {
+                                        bPawn2 = new Rook("♖", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn2.xPos, bPawn2.yPos, oldClickedCol, oldClickedRow, bPawn2);
+                                    } else if (peice.peiceNumber == 3 && peice.COLOR == "w") {
+                                        bPawn3 = new Rook("♖", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn3.xPos, bPawn3.yPos, oldClickedCol, oldClickedRow, bPawn3);
+                                    } else if (peice.peiceNumber == 4 && peice.COLOR == "w") {
+                                        bPawn4 = new Rook("♖", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn4.xPos, bPawn4.yPos, oldClickedCol, oldClickedRow, bPawn4);
+                                    } else if (peice.peiceNumber == 5 && peice.COLOR == "w") {
+                                        bPawn5 = new Rook("♖", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn5.xPos, bPawn5.yPos, oldClickedCol, oldClickedRow, bPawn5);
+                                    } else if (peice.peiceNumber == 6 && peice.COLOR == "w") {
+                                        bPawn6 = new Rook("♖", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn6.xPos, bPawn6.yPos, oldClickedCol, oldClickedRow, bPawn6);
+                                    } else if (peice.peiceNumber == 7 && peice.COLOR == "w") {
+                                        bPawn7 = new Rook("♖", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn7.xPos, bPawn7.yPos, oldClickedCol, oldClickedRow, bPawn7);
+                                    } else if (peice.peiceNumber == 8 && peice.COLOR == "w") {
+                                        bPawn8 = new Rook("♖", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn8.xPos, bPawn8.yPos, oldClickedCol, oldClickedRow, bPawn8);
+                                    }
+                                    break;
+                                case 2:
+                                    if (peice.peiceNumber == 1 && peice.COLOR == "w") {
+                                        bPawn1 = new Bishop("♗", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn1.xPos, bPawn1.yPos, oldClickedCol, oldClickedRow, bPawn1);
+                                    } else if (peice.peiceNumber == 2 && peice.COLOR == "w") {
+                                        bPawn2 = new Bishop("♗", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn2.xPos, bPawn2.yPos, oldClickedCol, oldClickedRow, bPawn2);
+                                    } else if (peice.peiceNumber == 3 && peice.COLOR == "w") {
+                                        bPawn3 = new Bishop("♗", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn3.xPos, bPawn3.yPos, oldClickedCol, oldClickedRow, bPawn3);
+                                    } else if (peice.peiceNumber == 4 && peice.COLOR == "w") {
+                                        bPawn4 = new Bishop("♗", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn4.xPos, bPawn4.yPos, oldClickedCol, oldClickedRow, bPawn4);
+                                    } else if (peice.peiceNumber == 5 && peice.COLOR == "w") {
+                                        bPawn5 = new Bishop("♗", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn5.xPos, bPawn5.yPos, oldClickedCol, oldClickedRow, bPawn5);
+                                    } else if (peice.peiceNumber == 6 && peice.COLOR == "w") {
+                                        bPawn6 = new Bishop("♗", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn6.xPos, bPawn6.yPos, oldClickedCol, oldClickedRow, bPawn6);
+                                    } else if (peice.peiceNumber == 7 && peice.COLOR == "w") {
+                                        bPawn7 = new Bishop("♗", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn7.xPos, bPawn7.yPos, oldClickedCol, oldClickedRow, bPawn7);
+                                    } else if (peice.peiceNumber == 8 && peice.COLOR == "w") {
+                                        bPawn8 = new Bishop("♗", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn8.xPos, bPawn8.yPos, oldClickedCol, oldClickedRow, bPawn8);
+                                    }
+                                    break;
+                                case 3:
+                                    if (peice.peiceNumber == 1 && peice.COLOR == "w") {
+                                        bPawn1 = new Knight("♘", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn1.xPos, bPawn1.yPos, oldClickedCol, oldClickedRow, bPawn1);
+                                    } else if (peice.peiceNumber == 2 && peice.COLOR == "w") {
+                                        bPawn2 = new Knight("♘", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn2.xPos, bPawn2.yPos, oldClickedCol, oldClickedRow, bPawn2);
+                                    } else if (peice.peiceNumber == 3 && peice.COLOR == "w") {
+                                        bPawn3 = new Knight("♘", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn3.xPos, bPawn3.yPos, oldClickedCol, oldClickedRow, bPawn3);
+                                    } else if (peice.peiceNumber == 4 && peice.COLOR == "w") {
+                                        bPawn4 = new Knight("♘", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn4.xPos, bPawn4.yPos, oldClickedCol, oldClickedRow, bPawn4);
+                                    } else if (peice.peiceNumber == 5 && peice.COLOR == "w") {
+                                        bPawn5 = new Knight("♘", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn5.xPos, bPawn5.yPos, oldClickedCol, oldClickedRow, bPawn5);
+                                    } else if (peice.peiceNumber == 6 && peice.COLOR == "w") {
+                                        bPawn6 = new Knight("♘", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn6.xPos, bPawn6.yPos, oldClickedCol, oldClickedRow, bPawn6);
+                                    } else if (peice.peiceNumber == 7 && peice.COLOR == "w") {
+                                        bPawn7 = new Knight("♘", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn7.xPos, bPawn7.yPos, oldClickedCol, oldClickedRow, bPawn7);
+                                    } else if (peice.peiceNumber == 8 && peice.COLOR == "w") {
+                                        bPawn8 = new Knight("♘", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn8.xPos, bPawn8.yPos, oldClickedCol, oldClickedRow, bPawn8);
+                                    }
+                                    break;
+                                default:
+                                    if (peice.peiceNumber == 1 && peice.COLOR == "w") {
+                                        bPawn1 = new Queen("♕", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn1.xPos, bPawn1.yPos, oldClickedCol, oldClickedRow, bPawn1);
+                                    } else if (peice.peiceNumber == 2 && peice.COLOR == "w") {
+                                        bPawn2 = new Queen("♕", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn2.xPos, bPawn2.yPos, oldClickedCol, oldClickedRow, bPawn2);
+                                    } else if (peice.peiceNumber == 3 && peice.COLOR == "w") {
+                                        bPawn3 = new Queen("♕", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn3.xPos, bPawn3.yPos, oldClickedCol, oldClickedRow, bPawn3);
+                                    } else if (peice.peiceNumber == 4 && peice.COLOR == "w") {
+                                        bPawn4 = new Queen("♕", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn4.xPos, bPawn4.yPos, oldClickedCol, oldClickedRow, bPawn4);
+                                    } else if (peice.peiceNumber == 5 && peice.COLOR == "w") {
+                                        bPawn5 = new Queen("♕", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn5.xPos, bPawn5.yPos, oldClickedCol, oldClickedRow, bPawn5);
+                                    } else if (peice.peiceNumber == 6 && peice.COLOR == "w") {
+                                        bPawn6 = new Queen("♕", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn6.xPos, bPawn6.yPos, oldClickedCol, oldClickedRow, bPawn6);
+                                    } else if (peice.peiceNumber == 7 && peice.COLOR == "w") {
+                                        bPawn7 = new Queen("♕", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn7.xPos, bPawn7.yPos, oldClickedCol, oldClickedRow, bPawn7);
+                                    } else if (peice.peiceNumber == 8 && peice.COLOR == "w") {
+                                        bPawn8 = new Queen("♕", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn8.xPos, bPawn8.yPos, oldClickedCol, oldClickedRow, bPawn8);
+                                    }
+                                    break;
+
+
+
+                                }
+                            } else if (peice instanceof Pawn&&peice.COLOR=="b"&&peice.getyPos()==7) {
+                                String[] options = {"Queen", "Rook", "Bishop", "Knight"};
+                                int choice = JOptionPane.showOptionDialog(null, "Choose a piece to promote to:", "Pawn Promotion",
+                                        JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+
+                                // Processing the user's choice
+                                switch (choice) {
+                                    case 0:
+
+                                    if (peice.peiceNumber==1&&peice.COLOR=="b"){
+                                        wPawn1 = new Queen("♛", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn1.xPos, wPawn1.yPos, oldClickedCol, oldClickedRow, wPawn1);
+                                    } else if (peice.peiceNumber==2&&peice.COLOR=="b"){
+                                        wPawn2 = new Queen("♛", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn2.xPos, wPawn2.yPos, oldClickedCol, oldClickedRow, wPawn2);
+                                    }else if (peice.peiceNumber==3&&peice.COLOR=="b"){
+                                        wPawn3 = new Queen("♛", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn3.xPos, wPawn3.yPos, oldClickedCol, oldClickedRow, wPawn3);
+                                    }else if (peice.peiceNumber==4&&peice.COLOR=="b"){
+                                        wPawn4 = new Queen("♛", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn4.xPos, wPawn4.yPos, oldClickedCol, oldClickedRow, wPawn4);
+                                    }else if (peice.peiceNumber==5&&peice.COLOR=="b"){
+                                        wPawn5 = new Queen("♛", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn5.xPos, wPawn5.yPos, oldClickedCol, oldClickedRow, wPawn5);
+                                    }else if (peice.peiceNumber==6&&peice.COLOR=="b"){
+                                        wPawn6 = new Queen("♛", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn6.xPos, wPawn6.yPos, oldClickedCol, oldClickedRow, wPawn6);
+                                    }else if (peice.peiceNumber==7&&peice.COLOR=="b"){
+                                        wPawn7 = new Queen("♛", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn7.xPos, wPawn7.yPos, oldClickedCol, oldClickedRow, wPawn7);
+                                    }else if (peice.peiceNumber==8&&peice.COLOR=="b"){
+                                        wPawn8 = new Queen("♛", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn8.xPos, wPawn8.yPos, oldClickedCol, oldClickedRow, wPawn8);
+                                    }
+
+                                    break;
+                                case 1:
+                                    if (peice.peiceNumber==1&&peice.COLOR=="b"){
+                                        wPawn1 = new Rook("♜", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn1.xPos, wPawn1.yPos, oldClickedCol, oldClickedRow, wPawn1);
+                                    } else if (peice.peiceNumber==2&&peice.COLOR=="b"){
+                                        wPawn2 = new Rook("♜", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn2.xPos, wPawn2.yPos, oldClickedCol, oldClickedRow, wPawn2);
+                                    }else if (peice.peiceNumber==3&&peice.COLOR=="b"){
+                                        wPawn3 = new Rook("♜", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn3.xPos, wPawn3.yPos, oldClickedCol, oldClickedRow, wPawn3);
+                                    }else if (peice.peiceNumber==4&&peice.COLOR=="b"){
+                                        wPawn4 = new Rook("♜", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn4.xPos, wPawn4.yPos, oldClickedCol, oldClickedRow, wPawn4);
+                                    }else if (peice.peiceNumber==5&&peice.COLOR=="b"){
+                                        wPawn5 = new Rook("♜", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn5.xPos, wPawn5.yPos, oldClickedCol, oldClickedRow, wPawn5);
+                                    }else if (peice.peiceNumber==6&&peice.COLOR=="b"){
+                                        wPawn6 = new Rook("♜", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn6.xPos, wPawn6.yPos, oldClickedCol, oldClickedRow, wPawn6);
+                                    }else if (peice.peiceNumber==7&&peice.COLOR=="b"){
+                                        wPawn7 = new Rook("♜", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn7.xPos, wPawn7.yPos, oldClickedCol, oldClickedRow, wPawn7);
+                                    }else if (peice.peiceNumber==8&&peice.COLOR=="b"){
+                                        wPawn8 = new Rook("♜", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn8.xPos, wPawn8.yPos, oldClickedCol, oldClickedRow, wPawn8);
+                                    }
+                                    break;
+                                case 2:
+                                    if (peice.peiceNumber==1&&peice.COLOR=="b"){
+                                        wPawn1 = new Bishop("♝", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn1.xPos, wPawn1.yPos, oldClickedCol, oldClickedRow, wPawn1);
+                                    } else if (peice.peiceNumber==2&&peice.COLOR=="b"){
+                                        wPawn2 = new Bishop("♝", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn2.xPos, wPawn2.yPos, oldClickedCol, oldClickedRow, wPawn2);
+                                    }else if (peice.peiceNumber==3&&peice.COLOR=="b"){
+                                        wPawn3 = new Bishop("♝", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn3.xPos, wPawn3.yPos, oldClickedCol, oldClickedRow, wPawn3);
+                                    }else if (peice.peiceNumber==4&&peice.COLOR=="b"){
+                                        wPawn4 = new Bishop("♝", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn4.xPos, wPawn4.yPos, oldClickedCol, oldClickedRow, wPawn4);
+                                    }else if (peice.peiceNumber==5&&peice.COLOR=="b"){
+                                        wPawn5 = new Bishop("♝", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn5.xPos, wPawn5.yPos, oldClickedCol, oldClickedRow, wPawn5);
+                                    }else if (peice.peiceNumber==6&&peice.COLOR=="b"){
+                                        wPawn6 = new Bishop("♝", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn6.xPos, wPawn6.yPos, oldClickedCol, oldClickedRow, wPawn6);
+                                    }else if (peice.peiceNumber==7&&peice.COLOR=="b"){
+                                        wPawn7 = new Bishop("♝", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn7.xPos, wPawn7.yPos, oldClickedCol, oldClickedRow, wPawn7);
+                                    }else if (peice.peiceNumber==8&&peice.COLOR=="b"){
+                                        wPawn8 = new Bishop("♝", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn8.xPos, wPawn8.yPos, oldClickedCol, oldClickedRow, wPawn8);
+                                    }
+                                    break;
+                                case 3:
+                                    if (peice.peiceNumber==1&&peice.COLOR=="b"){
+                                        wPawn1 = new Knight("♞", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn1.xPos, wPawn1.yPos, oldClickedCol, oldClickedRow, wPawn1);
+                                    } else if (peice.peiceNumber==2&&peice.COLOR=="b"){
+                                        wPawn2 = new Knight("♞", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn2.xPos, wPawn2.yPos, oldClickedCol, oldClickedRow, wPawn2);
+                                    }else if (peice.peiceNumber==3&&peice.COLOR=="b"){
+                                        wPawn3 = new Knight("♞", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn3.xPos, wPawn3.yPos, oldClickedCol, oldClickedRow, wPawn3);
+                                    }else if (peice.peiceNumber==4&&peice.COLOR=="b"){
+                                        wPawn4 = new Knight("♞", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn4.xPos, wPawn4.yPos, oldClickedCol, oldClickedRow, wPawn4);
+                                    }else if (peice.peiceNumber==5&&peice.COLOR=="b"){
+                                        wPawn5 = new Knight("♞", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn5.xPos, wPawn5.yPos, oldClickedCol, oldClickedRow, wPawn5);
+                                    }else if (peice.peiceNumber==6&&peice.COLOR=="b"){
+                                        wPawn6 = new Knight("♞", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn6.xPos, wPawn6.yPos, oldClickedCol, oldClickedRow, wPawn6);
+                                    }else if (peice.peiceNumber==7&&peice.COLOR=="b"){
+                                        wPawn7 = new Knight("♞", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn7.xPos, wPawn7.yPos, oldClickedCol, oldClickedRow, wPawn7);
+                                    }else if (peice.peiceNumber==8&&peice.COLOR=="b"){
+                                        wPawn8 = new Knight("♞", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn8.xPos, wPawn8.yPos, oldClickedCol, oldClickedRow, wPawn8);
+                                    }
+                                    break;
+                                default:
+                                    if (peice.peiceNumber==1&&peice.COLOR=="b"){
+                                        wPawn1 = new Queen("♛", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn1.xPos, wPawn1.yPos, oldClickedCol, oldClickedRow, wPawn1);
+                                    } else if (peice.peiceNumber==2&&peice.COLOR=="b"){
+                                        wPawn2 = new Queen("♛", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn2.xPos, wPawn2.yPos, oldClickedCol, oldClickedRow, wPawn2);
+                                    }else if (peice.peiceNumber==3&&peice.COLOR=="b"){
+                                        wPawn3 = new Queen("♛", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn3.xPos, wPawn3.yPos, oldClickedCol, oldClickedRow, wPawn3);
+                                    }else if (peice.peiceNumber==4&&peice.COLOR=="b"){
+                                        wPawn4 = new Queen("♛", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn4.xPos, wPawn4.yPos, oldClickedCol, oldClickedRow, wPawn4);
+                                    }else if (peice.peiceNumber==5&&peice.COLOR=="b"){
+                                        wPawn5 = new Queen("♛", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn5.xPos, wPawn5.yPos, oldClickedCol, oldClickedRow, wPawn5);
+                                    }else if (peice.peiceNumber==6&&peice.COLOR=="b"){
+                                        wPawn6 = new Queen("♛", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn6.xPos, wPawn6.yPos, oldClickedCol, oldClickedRow, wPawn6);
+                                    }else if (peice.peiceNumber==7&&peice.COLOR=="b"){
+                                        wPawn7 = new Queen("♛", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn7.xPos, wPawn7.yPos, oldClickedCol, oldClickedRow, wPawn7);
+                                    }else if (peice.peiceNumber==8&&peice.COLOR=="b"){
+                                        wPawn8 = new Queen("♛", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn8.xPos, wPawn8.yPos, oldClickedCol, oldClickedRow, wPawn8);
+                                    }
+                                    break;
+                                }
+                            }
                             System.out.println("turn = "+playerTurn);
-//                            peice=null;
                         }else {
                             JOptionPane.showMessageDialog(this, "Illegal capture", "Error", JOptionPane.ERROR_MESSAGE);
-
                         }
 
                     }
                 }else {
-                    if (peice.getcolor()=="♚"&&!wKing.kingHasmoved&&(clickedCol==2||clickedCol==6)){
+                    if (peice.getcolor()=="♚"&&!wKing.kingHasmoved&&(clickedCol==2&&!wRook1.RookHasMoved||clickedCol==6&&!wRook2.RookHasMoved)){
                         if (wKing.validCastle(oldClickedCol, oldClickedRow, clickedCol, clickedRow, boardState)){
                             peice.MovePiece(clickedCol, clickedRow);
                             updateBoardState(peice.getxPos(), peice.getyPos(), oldClickedCol, oldClickedRow, peice);
@@ -181,7 +469,7 @@ public class Chessboard extends JFrame implements ActionListener {
                             }
                             peice = null;
                         }
-                    } else if (peice.getcolor()=="♔"&&!bKing.kingHasmoved&&(clickedCol==2||clickedCol==6)) {
+                    } else if (peice.getcolor()=="♔"&&!bKing.kingHasmoved&&(clickedCol==2&&!bRook1.RookHasMoved||clickedCol==6&&!bRook2.RookHasMoved)) {
                         if (bKing.validCastle(oldClickedCol, oldClickedRow, clickedCol, clickedRow, boardState)){
                             peice.MovePiece(clickedCol, clickedRow);
                             updateBoardState(peice.getxPos(), peice.getyPos(), oldClickedCol, oldClickedRow, peice);
@@ -210,23 +498,319 @@ public class Chessboard extends JFrame implements ActionListener {
                             } else {
                                 playerTurn = "w";
                             }
+                            System.out.println(peice + " moved to ("+peice.xPos+", "+peice.yPos+")");
                             System.out.println("turn = " + playerTurn);
-                            System.out.println(peice.xPos + " " + peice.yPos + peice.getCOLOR());
 
+                            if (peice instanceof Pawn&&peice.COLOR=="w"&&peice.getyPos()==0){
+                                String[] options = {"Queen", "Rook", "Bishop", "Knight"};
+                                int choice = JOptionPane.showOptionDialog(null, "Choose a piece to promote to:", "Pawn Promotion",
+                                        JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+
+                                // Processing the user's choice
+                                switch (choice) {
+                                    case 0:
+                                    if (peice.peiceNumber==1&&peice.COLOR=="w"){
+                                        bPawn1 = new Queen("♕", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn1.xPos, bPawn1.yPos, oldClickedCol, oldClickedRow, bPawn1);
+                                    } else if (peice.peiceNumber==2&&peice.COLOR=="w"){
+                                        bPawn2 = new Queen("♕", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn2.xPos, bPawn2.yPos, oldClickedCol, oldClickedRow, bPawn2);
+                                    }else if (peice.peiceNumber==3&&peice.COLOR=="w"){
+                                        bPawn3 = new Queen("♕", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn3.xPos, bPawn3.yPos, oldClickedCol, oldClickedRow, bPawn3);
+                                    }else if (peice.peiceNumber==4&&peice.COLOR=="w"){
+                                        bPawn4 = new Queen("♕", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn4.xPos, bPawn4.yPos, oldClickedCol, oldClickedRow, bPawn4);
+                                    }else if (peice.peiceNumber==5&&peice.COLOR=="w"){
+                                        bPawn5 = new Queen("♕", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn5.xPos, bPawn5.yPos, oldClickedCol, oldClickedRow, bPawn5);
+                                    }else if (peice.peiceNumber==6&&peice.COLOR=="w"){
+                                        bPawn6 = new Queen("♕", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn6.xPos, bPawn6.yPos, oldClickedCol, oldClickedRow, bPawn6);
+                                    }else if (peice.peiceNumber==7&&peice.COLOR=="w"){
+                                        bPawn7 = new Queen("♕", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn7.xPos, bPawn7.yPos, oldClickedCol, oldClickedRow, bPawn7);
+                                    }else if (peice.peiceNumber==8&&peice.COLOR=="w"){
+                                        bPawn8 = new Queen("♕", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn8.xPos, bPawn8.yPos, oldClickedCol, oldClickedRow, bPawn8);
+                                    }
+
+                                    break;
+                                case 1:
+                                    if (peice.peiceNumber==1&&peice.COLOR=="w"){
+                                        bPawn1 = new Rook("♖", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn1.xPos, bPawn1.yPos, oldClickedCol, oldClickedRow, bPawn1);
+                                    } else if (peice.peiceNumber==2&&peice.COLOR=="w"){
+                                        bPawn2 = new Rook("♖", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn2.xPos, bPawn2.yPos, oldClickedCol, oldClickedRow, bPawn2);
+                                    }else if (peice.peiceNumber==3&&peice.COLOR=="w"){
+                                        bPawn3 = new Rook("♖", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn3.xPos, bPawn3.yPos, oldClickedCol, oldClickedRow, bPawn3);
+                                    }else if (peice.peiceNumber==4&&peice.COLOR=="w"){
+                                        bPawn4 = new Rook("♖", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn4.xPos, bPawn4.yPos, oldClickedCol, oldClickedRow, bPawn4);
+                                    }else if (peice.peiceNumber==5&&peice.COLOR=="w"){
+                                        bPawn5 = new Rook("♖", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn5.xPos, bPawn5.yPos, oldClickedCol, oldClickedRow, bPawn5);
+                                    }else if (peice.peiceNumber==6&&peice.COLOR=="w"){
+                                        bPawn6 = new Rook("♖", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn6.xPos, bPawn6.yPos, oldClickedCol, oldClickedRow, bPawn6);
+                                    }else if (peice.peiceNumber==7&&peice.COLOR=="w"){
+                                        bPawn7 = new Rook("♖", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn7.xPos, bPawn7.yPos, oldClickedCol, oldClickedRow, bPawn7);
+                                    }else if (peice.peiceNumber==8&&peice.COLOR=="w"){
+                                        bPawn8 = new Rook("♖", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn8.xPos, bPawn8.yPos, oldClickedCol, oldClickedRow, bPawn8);
+                                    }
+                                    break;
+                                case 2:
+                                    if (peice.peiceNumber==1&&peice.COLOR=="w"){
+                                        bPawn1 = new Bishop("♗", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn1.xPos, bPawn1.yPos, oldClickedCol, oldClickedRow, bPawn1);
+                                    } else if (peice.peiceNumber==2&&peice.COLOR=="w"){
+                                        bPawn2 = new Bishop("♗", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn2.xPos, bPawn2.yPos, oldClickedCol, oldClickedRow, bPawn2);
+                                    }else if (peice.peiceNumber==3&&peice.COLOR=="w"){
+                                        bPawn3 = new Bishop("♗", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn3.xPos, bPawn3.yPos, oldClickedCol, oldClickedRow, bPawn3);
+                                    }else if (peice.peiceNumber==4&&peice.COLOR=="w"){
+                                        bPawn4 = new Bishop("♗", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn4.xPos, bPawn4.yPos, oldClickedCol, oldClickedRow, bPawn4);
+                                    }else if (peice.peiceNumber==5&&peice.COLOR=="w"){
+                                        bPawn5 = new Bishop("♗", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn5.xPos, bPawn5.yPos, oldClickedCol, oldClickedRow, bPawn5);
+                                    }else if (peice.peiceNumber==6&&peice.COLOR=="w"){
+                                        bPawn6 = new Bishop("♗", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn6.xPos, bPawn6.yPos, oldClickedCol, oldClickedRow, bPawn6);
+                                    }else if (peice.peiceNumber==7&&peice.COLOR=="w"){
+                                        bPawn7 = new Bishop("♗", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn7.xPos, bPawn7.yPos, oldClickedCol, oldClickedRow, bPawn7);
+                                    }else if (peice.peiceNumber==8&&peice.COLOR=="w"){
+                                        bPawn8 = new Bishop("♗", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn8.xPos, bPawn8.yPos, oldClickedCol, oldClickedRow, bPawn8);
+                                    }
+                                    break;
+                                case 3:
+                                    if (peice.peiceNumber==1&&peice.COLOR=="w"){
+                                        bPawn1 = new Knight("♘", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn1.xPos, bPawn1.yPos, oldClickedCol, oldClickedRow, bPawn1);
+                                    } else if (peice.peiceNumber==2&&peice.COLOR=="w"){
+                                        bPawn2 = new Knight("♘", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn2.xPos, bPawn2.yPos, oldClickedCol, oldClickedRow, bPawn2);
+                                    }else if (peice.peiceNumber==3&&peice.COLOR=="w"){
+                                        bPawn3 = new Knight("♘", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn3.xPos, bPawn3.yPos, oldClickedCol, oldClickedRow, bPawn3);
+                                    }else if (peice.peiceNumber==4&&peice.COLOR=="w"){
+                                        bPawn4 = new Knight("♘", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn4.xPos, bPawn4.yPos, oldClickedCol, oldClickedRow, bPawn4);
+                                    }else if (peice.peiceNumber==5&&peice.COLOR=="w"){
+                                        bPawn5 = new Knight("♘", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn5.xPos, bPawn5.yPos, oldClickedCol, oldClickedRow, bPawn5);
+                                    }else if (peice.peiceNumber==6&&peice.COLOR=="w"){
+                                        bPawn6 = new Knight("♘", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn6.xPos, bPawn6.yPos, oldClickedCol, oldClickedRow, bPawn6);
+                                    }else if (peice.peiceNumber==7&&peice.COLOR=="w"){
+                                        bPawn7 = new Knight("♘", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn7.xPos, bPawn7.yPos, oldClickedCol, oldClickedRow, bPawn7);
+                                    }else if (peice.peiceNumber==8&&peice.COLOR=="w"){
+                                        bPawn8 = new Knight("♘", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn8.xPos, bPawn8.yPos, oldClickedCol, oldClickedRow, bPawn8);
+                                    }
+                                    break;
+                                default:
+                                    // Default action if the user closes the dialog
+                                    if (peice.peiceNumber==1&&peice.COLOR=="w"){
+                                        bPawn1 = new Queen("♕", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn1.xPos, bPawn1.yPos, oldClickedCol, oldClickedRow, bPawn1);
+                                    } else if (peice.peiceNumber==2&&peice.COLOR=="w"){
+                                        bPawn2 = new Queen("♕", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn2.xPos, bPawn2.yPos, oldClickedCol, oldClickedRow, bPawn2);
+                                    }else if (peice.peiceNumber==3&&peice.COLOR=="w"){
+                                        bPawn3 = new Queen("♕", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn3.xPos, bPawn3.yPos, oldClickedCol, oldClickedRow, bPawn3);
+                                    }else if (peice.peiceNumber==4&&peice.COLOR=="w"){
+                                        bPawn4 = new Queen("♕", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn4.xPos, bPawn4.yPos, oldClickedCol, oldClickedRow, bPawn4);
+                                    }else if (peice.peiceNumber==5&&peice.COLOR=="w"){
+                                        bPawn5 = new Queen("♕", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn5.xPos, bPawn5.yPos, oldClickedCol, oldClickedRow, bPawn5);
+                                    }else if (peice.peiceNumber==6&&peice.COLOR=="w"){
+                                        bPawn6 = new Queen("♕", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn6.xPos, bPawn6.yPos, oldClickedCol, oldClickedRow, bPawn6);
+                                    }else if (peice.peiceNumber==7&&peice.COLOR=="w"){
+                                        bPawn7 = new Queen("♕", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn7.xPos, bPawn7.yPos, oldClickedCol, oldClickedRow, bPawn7);
+                                    }else if (peice.peiceNumber==8&&peice.COLOR=="w"){
+                                        bPawn8 = new Queen("♕", 1, clickedCol, clickedRow, peiceArr, "w");
+                                        updateBoardState(bPawn8.xPos, bPawn8.yPos, oldClickedCol, oldClickedRow, bPawn8);
+                                    }
+                                    break;
+                                }
+                            } else if (peice instanceof Pawn&&peice.COLOR=="b"&&peice.getyPos()==7) {
+                                String[] options = {"Queen", "Rook", "Bishop", "Knight"};
+                                int choice = JOptionPane.showOptionDialog(null, "Choose a piece to promote to:", "Pawn Promotion",
+                                        JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+
+                                // Processing the user's choice
+                                switch (choice) {
+                                    case 0:
+
+                                    if (peice.peiceNumber==1&&peice.COLOR=="b"){
+                                        wPawn1 = new Queen("♛", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn1.xPos, wPawn1.yPos, oldClickedCol, oldClickedRow, wPawn1);
+                                    } else if (peice.peiceNumber==2&&peice.COLOR=="b"){
+                                        wPawn2 = new Queen("♛", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn2.xPos, wPawn2.yPos, oldClickedCol, oldClickedRow, wPawn2);
+                                    }else if (peice.peiceNumber==3&&peice.COLOR=="b"){
+                                        wPawn3 = new Queen("♛", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn3.xPos, wPawn3.yPos, oldClickedCol, oldClickedRow, wPawn3);
+                                    }else if (peice.peiceNumber==4&&peice.COLOR=="b"){
+                                        wPawn4 = new Queen("♛", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn4.xPos, wPawn4.yPos, oldClickedCol, oldClickedRow, wPawn4);
+                                    }else if (peice.peiceNumber==5&&peice.COLOR=="b"){
+                                        wPawn5 = new Queen("♛", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn5.xPos, wPawn5.yPos, oldClickedCol, oldClickedRow, wPawn5);
+                                    }else if (peice.peiceNumber==6&&peice.COLOR=="b"){
+                                        wPawn6 = new Queen("♛", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn6.xPos, wPawn6.yPos, oldClickedCol, oldClickedRow, wPawn6);
+                                    }else if (peice.peiceNumber==7&&peice.COLOR=="b"){
+                                        wPawn7 = new Queen("♛", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn7.xPos, wPawn7.yPos, oldClickedCol, oldClickedRow, wPawn7);
+                                    }else if (peice.peiceNumber==8&&peice.COLOR=="b"){
+                                        wPawn8 = new Queen("♛", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn8.xPos, wPawn8.yPos, oldClickedCol, oldClickedRow, wPawn8);
+                                    }
+
+                                    break;
+                                case 1:
+                                    if (peice.peiceNumber==1&&peice.COLOR=="b"){
+                                        wPawn1 = new Rook("♜", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn1.xPos, wPawn1.yPos, oldClickedCol, oldClickedRow, wPawn1);
+                                    } else if (peice.peiceNumber==2&&peice.COLOR=="b"){
+                                        wPawn2 = new Rook("♜", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn2.xPos, wPawn2.yPos, oldClickedCol, oldClickedRow, wPawn2);
+                                    }else if (peice.peiceNumber==3&&peice.COLOR=="b"){
+                                        wPawn3 = new Rook("♜", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn3.xPos, wPawn3.yPos, oldClickedCol, oldClickedRow, wPawn3);
+                                    }else if (peice.peiceNumber==4&&peice.COLOR=="b"){
+                                        wPawn4 = new Rook("♜", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn4.xPos, wPawn4.yPos, oldClickedCol, oldClickedRow, wPawn4);
+                                    }else if (peice.peiceNumber==5&&peice.COLOR=="b"){
+                                        wPawn5 = new Rook("♜", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn5.xPos, wPawn5.yPos, oldClickedCol, oldClickedRow, wPawn5);
+                                    }else if (peice.peiceNumber==6&&peice.COLOR=="b"){
+                                        wPawn6 = new Rook("♜", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn6.xPos, wPawn6.yPos, oldClickedCol, oldClickedRow, wPawn6);
+                                    }else if (peice.peiceNumber==7&&peice.COLOR=="b"){
+                                        wPawn7 = new Rook("♜", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn7.xPos, wPawn7.yPos, oldClickedCol, oldClickedRow, wPawn7);
+                                    }else if (peice.peiceNumber==8&&peice.COLOR=="b"){
+                                        wPawn8 = new Rook("♜", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn8.xPos, wPawn8.yPos, oldClickedCol, oldClickedRow, wPawn8);
+                                    }
+                                    break;
+                                case 2:
+                                    if (peice.peiceNumber==1&&peice.COLOR=="b"){
+                                        wPawn1 = new Bishop("♝", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn1.xPos, wPawn1.yPos, oldClickedCol, oldClickedRow, wPawn1);
+                                    } else if (peice.peiceNumber==2&&peice.COLOR=="b"){
+                                        wPawn2 = new Bishop("♝", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn2.xPos, wPawn2.yPos, oldClickedCol, oldClickedRow, wPawn2);
+                                    }else if (peice.peiceNumber==3&&peice.COLOR=="b"){
+                                        wPawn3 = new Bishop("♝", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn3.xPos, wPawn3.yPos, oldClickedCol, oldClickedRow, wPawn3);
+                                    }else if (peice.peiceNumber==4&&peice.COLOR=="b"){
+                                        wPawn4 = new Bishop("♝", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn4.xPos, wPawn4.yPos, oldClickedCol, oldClickedRow, wPawn4);
+                                    }else if (peice.peiceNumber==5&&peice.COLOR=="b"){
+                                        wPawn5 = new Bishop("♝", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn5.xPos, wPawn5.yPos, oldClickedCol, oldClickedRow, wPawn5);
+                                    }else if (peice.peiceNumber==6&&peice.COLOR=="b"){
+                                        wPawn6 = new Bishop("♝", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn6.xPos, wPawn6.yPos, oldClickedCol, oldClickedRow, wPawn6);
+                                    }else if (peice.peiceNumber==7&&peice.COLOR=="b"){
+                                        wPawn7 = new Bishop("♝", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn7.xPos, wPawn7.yPos, oldClickedCol, oldClickedRow, wPawn7);
+                                    }else if (peice.peiceNumber==8&&peice.COLOR=="b"){
+                                        wPawn8 = new Bishop("♝", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn8.xPos, wPawn8.yPos, oldClickedCol, oldClickedRow, wPawn8);
+                                    }
+                                    break;
+                                case 3:
+                                    if (peice.peiceNumber==1&&peice.COLOR=="b"){
+                                        wPawn1 = new Knight("♞", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn1.xPos, wPawn1.yPos, oldClickedCol, oldClickedRow, wPawn1);
+                                    } else if (peice.peiceNumber==2&&peice.COLOR=="b"){
+                                        wPawn2 = new Knight("♞", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn2.xPos, wPawn2.yPos, oldClickedCol, oldClickedRow, wPawn2);
+                                    }else if (peice.peiceNumber==3&&peice.COLOR=="b"){
+                                        wPawn3 = new Knight("♞", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn3.xPos, wPawn3.yPos, oldClickedCol, oldClickedRow, wPawn3);
+                                    }else if (peice.peiceNumber==4&&peice.COLOR=="b"){
+                                        wPawn4 = new Knight("♞", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn4.xPos, wPawn4.yPos, oldClickedCol, oldClickedRow, wPawn4);
+                                    }else if (peice.peiceNumber==5&&peice.COLOR=="b"){
+                                        wPawn5 = new Knight("♞", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn5.xPos, wPawn5.yPos, oldClickedCol, oldClickedRow, wPawn5);
+                                    }else if (peice.peiceNumber==6&&peice.COLOR=="b"){
+                                        wPawn6 = new Knight("♞", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn6.xPos, wPawn6.yPos, oldClickedCol, oldClickedRow, wPawn6);
+                                    }else if (peice.peiceNumber==7&&peice.COLOR=="b"){
+                                        wPawn7 = new Knight("♞", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn7.xPos, wPawn7.yPos, oldClickedCol, oldClickedRow, wPawn7);
+                                    }else if (peice.peiceNumber==8&&peice.COLOR=="b"){
+                                        wPawn8 = new Knight("♞", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn8.xPos, wPawn8.yPos, oldClickedCol, oldClickedRow, wPawn8);
+                                    }
+                                    break;
+                                default:
+                                    if (peice.peiceNumber==1&&peice.COLOR=="b"){
+                                        wPawn1 = new Queen("♛", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn1.xPos, wPawn1.yPos, oldClickedCol, oldClickedRow, wPawn1);
+                                    } else if (peice.peiceNumber==2&&peice.COLOR=="b"){
+                                        wPawn2 = new Queen("♛", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn2.xPos, wPawn2.yPos, oldClickedCol, oldClickedRow, wPawn2);
+                                    }else if (peice.peiceNumber==3&&peice.COLOR=="b"){
+                                        wPawn3 = new Queen("♛", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn3.xPos, wPawn3.yPos, oldClickedCol, oldClickedRow, wPawn3);
+                                    }else if (peice.peiceNumber==4&&peice.COLOR=="b"){
+                                        wPawn4 = new Queen("♛", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn4.xPos, wPawn4.yPos, oldClickedCol, oldClickedRow, wPawn4);
+                                    }else if (peice.peiceNumber==5&&peice.COLOR=="b"){
+                                        wPawn5 = new Queen("♛", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn5.xPos, wPawn5.yPos, oldClickedCol, oldClickedRow, wPawn5);
+                                    }else if (peice.peiceNumber==6&&peice.COLOR=="b"){
+                                        wPawn6 = new Queen("♛", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn6.xPos, wPawn6.yPos, oldClickedCol, oldClickedRow, wPawn6);
+                                    }else if (peice.peiceNumber==7&&peice.COLOR=="b"){
+                                        wPawn7 = new Queen("♛", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn7.xPos, wPawn7.yPos, oldClickedCol, oldClickedRow, wPawn7);
+                                    }else if (peice.peiceNumber==8&&peice.COLOR=="b"){
+                                        wPawn8 = new Queen("♛", 1, clickedCol, clickedRow, peiceArr, "b");
+                                        updateBoardState(wPawn8.xPos, wPawn8.yPos, oldClickedCol, oldClickedRow, wPawn8);
+                                    }
+                                    break;
+                                }
+                            }
                             peice = null;
                         } else {
                             JOptionPane.showMessageDialog(this, "Illegal move", "Error", JOptionPane.ERROR_MESSAGE);
-
                         }
                     }
                 }
             }
+
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Not your turn, select piece first", "Error", JOptionPane.ERROR_MESSAGE);
         }
+        if (bKing.getcolor()==""){
+            JOptionPane.showMessageDialog(this, "Black WON!");
+        }
+        if (wKing.getcolor()==""){
+            JOptionPane.showMessageDialog(this, "White WON");
+        }
     }
     private void initializePieces() {
-
 
         // intantciating (I hope I spelled that right) all the peices
         Rook wRook1 = new Rook("♖", 1, 0, 0, peiceArr, "w");
@@ -238,14 +822,14 @@ public class Chessboard extends JFrame implements ActionListener {
         Knight wKnight2 = new Knight("♘", 2, 6, 0, peiceArr, "w");
         Rook wRook2 = new Rook("♖", 2, 7, 0, peiceArr, "w");
 
-        Pawn wPawn1 = new Pawn("♙", 1, 0, 1, peiceArr, "w");
-        Pawn wPawn2 = new Pawn("♙", 2, 1, 1, peiceArr, "w");
-        Pawn wPawn3 = new Pawn("♙", 3, 2, 1, peiceArr, "w");
-        Pawn wPawn4 = new Pawn("♙", 4, 3, 1, peiceArr, "w");
-        Pawn wPawn5 = new Pawn("♙", 5, 4, 1, peiceArr, "w");
-        Pawn wPawn6 = new Pawn("♙", 6, 5, 1, peiceArr, "w");
-        Pawn wPawn7 = new Pawn("♙", 7, 6, 1, peiceArr, "w");
-        Pawn wPawn8 = new Pawn("♙", 8, 7, 1, peiceArr, "w");
+        Peice wPawn1 = new Pawn("♙", 1, 0, 1, peiceArr, "w");
+        Peice wPawn2 = new Pawn("♙", 2, 1, 1, peiceArr, "w");
+        Peice wPawn3 = new Pawn("♙", 3, 2, 1, peiceArr, "w");
+        Peice wPawn4 = new Pawn("♙", 4, 3, 1, peiceArr, "w");
+        Peice wPawn5 = new Pawn("♙", 5, 4, 1, peiceArr, "w");
+        Peice wPawn6 = new Pawn("♙", 6, 5, 1, peiceArr, "w");
+        Peice wPawn7 = new Pawn("♙", 7, 6, 1, peiceArr, "w");
+        Peice wPawn8 = new Pawn("♙", 8, 7, 1, peiceArr, "w");
 
         Rook bRook1 = new Rook("♜", 1, 0, 7, peiceArr, "b");
         Knight bKnight1 = new Knight("♞", 1, 1, 7, peiceArr, "b");
@@ -256,14 +840,14 @@ public class Chessboard extends JFrame implements ActionListener {
         Knight bKnight2 = new Knight("♞", 2, 6, 7, peiceArr, "b");
         Rook bRook2 = new Rook("♜", 2, 7, 7, peiceArr, "b");
 
-        Pawn bPawn1 = new Pawn("♟", 1, 0, 6, peiceArr, "b");
-        Pawn bPawn2 = new Pawn("♟", 2, 1, 6, peiceArr, "b");
-        Pawn bPawn3 = new Pawn("♟", 3, 2, 6, peiceArr, "b");
-        Pawn bPawn4 = new Pawn("♟", 4, 3, 6, peiceArr, "b");
-        Pawn bPawn5 = new Pawn("♟", 5, 4, 6, peiceArr, "b");
-        Pawn bPawn6 = new Pawn("♟", 6, 5, 6, peiceArr, "b");
-        Pawn bPawn7 = new Pawn("♟", 7, 6, 6, peiceArr, "b");
-        Pawn bPawn8 = new Pawn("♟", 8, 7, 6, peiceArr, "b");
+        Peice bPawn1 = new Pawn("♟", 1, 0, 6, peiceArr, "b");
+        Peice bPawn2 = new Pawn("♟", 2, 1, 6, peiceArr, "b");
+        Peice bPawn3 = new Pawn("♟", 3, 2, 6, peiceArr, "b");
+        Peice bPawn4 = new Pawn("♟", 4, 3, 6, peiceArr, "b");
+        Peice bPawn5 = new Pawn("♟", 5, 4, 6, peiceArr, "b");
+        Peice bPawn6 = new Pawn("♟", 6, 5, 6, peiceArr, "b");
+        Peice bPawn7 = new Pawn("♟", 7, 6, 6, peiceArr, "b");
+        Peice bPawn8 = new Pawn("♟", 8, 7, 6, peiceArr, "b");
 
         boardState[0] = new String[]{bRook1.getcolor(), bKnight1.getcolor(), bBishop1.getcolor(), bQueen.getcolor(), bKing.getcolor(), bBishop2.getcolor(), bKnight2.getcolor(), bRook2.getcolor()};
         boardState[1] = new String[]{bPawn1.getcolor(), bPawn2.getcolor(), bPawn3.getcolor(), bPawn4.getcolor(), bPawn5.getcolor(), bPawn6.getcolor(), bPawn7.getcolor(), bPawn8.getcolor()};
