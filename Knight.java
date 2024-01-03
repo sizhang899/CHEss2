@@ -6,23 +6,7 @@ public class Knight extends Peice {
         super("Knight", c, n, x, y, pA, COLOR);
     }
 
-    @Override
-    public void skroinkPeices(Peice[][] pA) {
-        peiceArr = pA;
-    }
 
-
-    public void checkShouldRender(int x, int y) {
-        if (!(peiceArr[yPos][xPos].getColor().equals(color))) {
-            // shouldRender = false;
-        }
-    }
-
-    public boolean getShouldRender() {
-        return shouldRender;
-    }
-
-    // checks if the selected square is one of the squares that the knight can move to (look up "Knight movement chess" if you want a visual)
     @Override
     public boolean validMove(int dX, int dY, int cX, int cY, String board[][]) {
 
