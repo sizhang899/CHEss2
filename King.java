@@ -1,3 +1,4 @@
+import javax.swing.*;
 
 public class King extends Peice {
     public boolean kingHasmoved = false;
@@ -5,27 +6,10 @@ public class King extends Peice {
         super("King", c, n, x, y, pA, COLOR);
     }
 
-    @Override
-    public void skroinkPeices(Peice[][] pA) {
-        peiceArr = pA;
-    }
 
-    public void checkShouldRender(int x, int y) {
-        if (!(peiceArr[yPos][xPos].getColor().equals(color))) {
-            shouldRender = false;
-        }
-    }
-
-    public boolean getShouldRender() {
-        return shouldRender;
-    }
-
-    // checks to find if the selected square is within one block of the king.
     @Override
     public boolean validMove(int dX, int dY, int cX, int cY, String board[][]) {
-        if (!kingHasmoved){
 
-        }
         int deltaX = Math.abs(dX - cX);
         int deltaY = Math.abs(dY - cY);
         if ((deltaX == 1 || deltaY == 1) && (deltaX < 2 && deltaY < 2)) {
@@ -44,5 +28,53 @@ public class King extends Peice {
     @Override
     public boolean validCapture(int dX, int dY, int cX, int cY, String[][] board) {
         return validMove(dX, dY, cX, cY, board);
+    }
+    public boolean validCastle(int dX, int dY, int cX, int cY, String[][] board){
+        if (!kingHasmoved){
+            if ((cX==2)&&(cY==0)&&(dX==4)&&(dY==0)&&(COLOR.equals("b"))&&(board[0][0].equals("♜"))) {
+                if (board[0][1].isEmpty()&&board[0][2].isEmpty()&&board[0][3].isEmpty()){
+                    kingHasmoved = true;
+                    return true;
+                }else {
+                    JOptionPane.showMessageDialog(null, "Invalid castle, Piece in the way", "Error", JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
+
+            } else if ((cX==6)&&(cY==0)&&(dX==4)&&(dY==0)&&(COLOR.equals("b"))&&(board[0][7].equals("♜"))) {
+                if (board[0][5].isEmpty()&&board[0][6].isEmpty()){
+                    kingHasmoved = true;
+
+                    return true;
+                }else {
+                    JOptionPane.showMessageDialog(null, "Invalid castle, Piece in the way", "Error", JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
+            }else if ((cX==2)&&(cY==7)&&(dX==4)&&(dY==7)&&(COLOR.equals("w"))&&(board[7][0].equals("♖"))) {
+                if (board[7][1].isEmpty()&&board[7][2].isEmpty()&&board[7][3].isEmpty()){
+                    kingHasmoved = true;
+                    return true;
+                }else {
+                    JOptionPane.showMessageDialog(null, "Invalid castle, Piece in the way", "Error", JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
+
+            } else if ((cX==6)&&(cY==7)&&(dX==4)&&(dY==7)&&(COLOR.equals("w"))&&(board[7][7].equals("♖"))) {
+                if (board[7][5].isEmpty()&&board[7][6].isEmpty()){
+                    kingHasmoved = true;
+
+                    return true;
+                }else {
+                    JOptionPane.showMessageDialog(null, "Invalid castle, Piece in the way", "Error", JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
+            }
+            else {
+                JOptionPane.showMessageDialog(null, "Invalid castle, King moved already", "Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+        }else {
+            JOptionPane.showMessageDialog(null, "Invalid castle, King has already moved", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
     }
 }
