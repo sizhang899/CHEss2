@@ -547,10 +547,14 @@ public class Chessboard extends JFrame implements ActionListener  {
 
                             if (playerTurn.equals("w")){
                                 if (BlackIsCheck()){
-                                    boardState[peice.xPos][peice.yPos]="";
-                                    squares[peice.xPos][peice.yPos].setText("");
+                                    boardState[peice.getyPos()][peice.getxPos()]="";
+                                    squares[peice.getyPos()][peice.getxPos()].setText("");
                                     peice.MovePiece(oldClickedCol, oldClickedRow);
 
+
+
+                                    boardState[oldClickedRow][oldClickedCol]=peice.color;
+                                    squares[oldClickedRow][oldClickedCol].setText(peice.color);
                                     if (playerTurn.equals("w")) {
                                         playerTurn = "b";
                                     } else {
@@ -559,9 +563,12 @@ public class Chessboard extends JFrame implements ActionListener  {
                                 }
                             }else if(playerTurn.equals("b")){
                                 if (WhiteIsCheck()){
-                                    boardState[peice.xPos][peice.yPos]="";
-                                    squares[peice.xPos][peice.yPos].setText("");
+                                    boardState[peice.getyPos()][peice.getxPos()]="";
+                                    squares[peice.getyPos()][peice.getxPos()].setText("");
                                     peice.MovePiece(oldClickedCol, oldClickedRow);
+
+                                    boardState[oldClickedRow][oldClickedCol]=peice.color;
+                                    squares[oldClickedRow][oldClickedCol].setText(peice.color);
                                     if (playerTurn.equals("w")) {
                                         playerTurn = "b";
                                     } else {
@@ -569,7 +576,7 @@ public class Chessboard extends JFrame implements ActionListener  {
                                     }
                                 }
                             }
-                            updateBoardState(peice.getxPos(), peice.getyPos(), oldClickedCol, oldClickedRow, peice);
+//                            updateBoardState(peice.getxPos(), peice.getyPos(), oldClickedCol, oldClickedRow, peice);
                             if (playerTurn.equals("w")) {
                                 playerTurn = "b";
                             } else {
@@ -963,73 +970,73 @@ public class Chessboard extends JFrame implements ActionListener  {
         return null;
     }
     public boolean WhiteIsCheck(){
-        if (bPawn1.validMove(bPawn1.xPos, bPawn1.yPos, wKing.xPos, wKing.yPos, boardState)){
+        if (bPawn1.validCapture(bPawn1.xPos, bPawn1.yPos, wKing.xPos, wKing.yPos, boardState)){
             return true;
-        }else if (bPawn2.validMove(bPawn2.xPos, bPawn2.yPos, wKing.xPos, wKing.yPos, boardState)){
+        }else if (bPawn2.validCapture(bPawn2.xPos, bPawn2.yPos, wKing.xPos, wKing.yPos, boardState)){
             return true;
-        }if (bPawn3.validMove(bPawn3.xPos, bPawn3.yPos, wKing.xPos, wKing.yPos, boardState)){
+        }if (bPawn3.validCapture(bPawn3.xPos, bPawn3.yPos, wKing.xPos, wKing.yPos, boardState)){
             return true;
-        }if (bPawn4.validMove(bPawn4.xPos, bPawn4.yPos, wKing.xPos, wKing.yPos, boardState)){
+        }if (bPawn4.validCapture(bPawn4.xPos, bPawn4.yPos, wKing.xPos, wKing.yPos, boardState)){
             return true;
-        }if (bPawn5.validMove(bPawn5.xPos, bPawn5.yPos, wKing.xPos, wKing.yPos, boardState)){
+        }if (bPawn5.validCapture(bPawn5.xPos, bPawn5.yPos, wKing.xPos, wKing.yPos, boardState)){
             return true;
-        }if (bPawn6.validMove(bPawn6.xPos, bPawn6.yPos, wKing.xPos, wKing.yPos, boardState)){
+        }if (bPawn6.validCapture(bPawn6.xPos, bPawn6.yPos, wKing.xPos, wKing.yPos, boardState)){
             return true;
-        }if (bPawn7.validMove(bPawn7.xPos, bPawn7.yPos, wKing.xPos, wKing.yPos, boardState)){
+        }if (bPawn7.validCapture(bPawn7.xPos, bPawn7.yPos, wKing.xPos, wKing.yPos, boardState)){
             return true;
-        }if (bPawn8.validMove(bPawn8.xPos, bPawn8.yPos, wKing.xPos, wKing.yPos, boardState)){
+        }if (bPawn8.validCapture(bPawn8.xPos, bPawn8.yPos, wKing.xPos, wKing.yPos, boardState)){
             return true;
-        }if (bRook1.validMove(bRook1.xPos, bRook1.yPos, wKing.xPos, wKing.yPos, boardState)){
+        }if (bRook1.validCaptureCheck(bRook1.xPos, bRook1.yPos, wKing.xPos, wKing.yPos, boardState)){
             return true;
-        }if (bKnight1.validMove(bKnight1.xPos, bKnight1.yPos, wKing.xPos, wKing.yPos, boardState)){
+        }if (bKnight1.validCapture(bKnight1.xPos, bKnight1.yPos, wKing.xPos, wKing.yPos, boardState)){
             return true;
-        }if (bBishop1.validMove(bBishop1.xPos, bBishop1.yPos, wKing.xPos, wKing.yPos, boardState)){
+        }if (bBishop1.validCaptureCheck(bBishop1.xPos, bBishop1.yPos, wKing.xPos, wKing.yPos, boardState)){
             return true;
-        }if (bQueen.validMove(bQueen.xPos, bQueen.yPos, wKing.xPos, wKing.yPos, boardState)){
+        }if (bQueen.validCaptureCheck(bQueen.xPos, bQueen.yPos, wKing.xPos, wKing.yPos, boardState)){
             return true;
-        }if (bKing.validMove(bKing.xPos, bKing.yPos, wKing.xPos, wKing.yPos, boardState)){
+        }if (bKing.validCapture(bKing.xPos, bKing.yPos, wKing.xPos, wKing.yPos, boardState)){
             return true;
-        }if (bBishop2.validMove(bBishop2.xPos, bBishop2.yPos, wKing.xPos, wKing.yPos, boardState)){
+        }if (bBishop2.validCaptureCheck(bBishop2.xPos, bBishop2.yPos, wKing.xPos, wKing.yPos, boardState)){
             return true;
-        }if (bKnight2.validMove(bKnight2.xPos, bKnight2.yPos, wKing.xPos, wKing.yPos, boardState)){
+        }if (bKnight2.validCapture(bKnight2.xPos, bKnight2.yPos, wKing.xPos, wKing.yPos, boardState)){
             return true;
-        }if (bRook2.validMove(bRook2.xPos, bRook2.yPos, wKing.xPos, wKing.yPos, boardState)){
+        }if (bRook2.validCaptureCheck(bRook2.xPos, bRook2.yPos, wKing.xPos, wKing.yPos, boardState)){
             return true;
         }
         return false;
     }
     public boolean BlackIsCheck(){
-        if (wPawn1.validMove(wPawn1.xPos, wPawn1.yPos, bKing.xPos, bKing.yPos, boardState)){
+        if (wPawn1.validCapture(wPawn1.xPos, wPawn1.yPos, bKing.xPos, bKing.yPos, boardState)){
             return true;
-        }else if (wPawn2.validMove(wPawn2.xPos, wPawn2.yPos, bKing.xPos, bKing.yPos, boardState)){
+        }else if (wPawn2.validCapture(wPawn2.xPos, wPawn2.yPos, bKing.xPos, bKing.yPos, boardState)){
             return true;
-        }if (wPawn3.validMove(wPawn3.xPos, wPawn3.yPos, bKing.xPos, bKing.yPos, boardState)){
+        }if (wPawn3.validCapture(wPawn3.xPos, wPawn3.yPos, bKing.xPos, bKing.yPos, boardState)){
             return true;
-        }if (wPawn4.validMove(wPawn4.xPos, wPawn4.yPos, bKing.xPos, bKing.yPos, boardState)){
+        }if (wPawn4.validCapture(wPawn4.xPos, wPawn4.yPos, bKing.xPos, bKing.yPos, boardState)){
             return true;
-        }if (wPawn5.validMove(wPawn5.xPos, wPawn5.yPos, bKing.xPos, bKing.yPos, boardState)){
+        }if (wPawn5.validCapture(wPawn5.xPos, wPawn5.yPos, bKing.xPos, bKing.yPos, boardState)){
             return true;
-        }if (wPawn6.validMove(wPawn6.xPos, wPawn6.yPos, bKing.xPos, bKing.yPos, boardState)){
+        }if (wPawn6.validCapture(wPawn6.xPos, wPawn6.yPos, bKing.xPos, bKing.yPos, boardState)){
             return true;
-        }if (wPawn7.validMove(wPawn7.xPos, wPawn7.yPos, bKing.xPos, bKing.yPos, boardState)){
+        }if (wPawn7.validCapture(wPawn7.xPos, wPawn7.yPos, bKing.xPos, bKing.yPos, boardState)){
             return true;
-        }if (wPawn8.validMove(wPawn8.xPos, wPawn8.yPos, bKing.xPos, bKing.yPos, boardState)){
+        }if (wPawn8.validCapture(wPawn8.xPos, wPawn8.yPos, bKing.xPos, bKing.yPos, boardState)){
             return true;
-        }if (wRook1.validMove(wRook1.xPos, wRook1.yPos, bKing.xPos, bKing.yPos, boardState)){
+        }if (wRook1.validCaptureCheck(wRook1.xPos, wRook1.yPos, bKing.xPos, bKing.yPos, boardState)){
             return true;
-        }if (wKnight1.validMove(wKnight1.xPos, wKnight1.yPos, bKing.xPos, bKing.yPos, boardState)){
+        }if (wKnight1.validCapture(wKnight1.xPos, wKnight1.yPos, bKing.xPos, bKing.yPos, boardState)){
             return true;
-        }if (wBishop1.validMove(wBishop1.xPos, wBishop1.yPos, bKing.xPos, bKing.yPos, boardState)){
+        }if (wBishop1.validCaptureCheck(wBishop1.xPos, wBishop1.yPos, bKing.xPos, bKing.yPos, boardState)){
             return true;
-        }if (wQueen.validMove(wQueen.xPos, wQueen.yPos, bKing.xPos, bKing.yPos, boardState)){
+        }if (wQueen.validCaptureCheck(wQueen.xPos, wQueen.yPos, bKing.xPos, bKing.yPos, boardState)){
             return true;
-        }if (wKing.validMove(wKing.xPos, wKing.yPos, bKing.xPos, bKing.yPos, boardState)){
+        }if (wKing.validCapture(wKing.xPos, wKing.yPos, bKing.xPos, bKing.yPos, boardState)){
             return true;
-        }if (wBishop2.validMove(wBishop2.xPos, wBishop2.yPos, bKing.xPos, bKing.yPos, boardState)){
+        }if (wBishop2.validCaptureCheck(wBishop2.xPos, wBishop2.yPos, bKing.xPos, bKing.yPos, boardState)){
             return true;
-        }if (wKnight2.validMove(wKnight2.xPos, wKnight2.yPos, bKing.xPos, bKing.yPos, boardState)){
+        }if (wKnight2.validCapture(wKnight2.xPos, wKnight2.yPos, bKing.xPos, bKing.yPos, boardState)){
             return true;
-        }if (wRook2.validMove(wRook2.xPos, wRook2.yPos, bKing.xPos, bKing.yPos, boardState)){
+        }if (wRook2.validCaptureCheck(wRook2.xPos, wRook2.yPos, bKing.xPos, bKing.yPos, boardState)){
             return true;
         }
         return false;
