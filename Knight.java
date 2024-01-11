@@ -2,8 +2,8 @@
 import java.lang.Math;
 
 public class Knight extends Peice {
-    public Knight (String c, int n, int x, int y, Peice[][] pA, String COLOR) {
-        super("Knight", c, n, x, y, pA, COLOR);
+    public Knight (String c, int n, int x, int y, String COLOR) {
+        super("Knight", c, n, x, y, COLOR);
     }
 
 
@@ -27,7 +27,6 @@ public class Knight extends Peice {
             super.yPos = dY;
             return true;
         } else {
-            System.out.println("invalid knight move!");
             return false;
         }
     }
