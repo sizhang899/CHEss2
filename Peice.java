@@ -1,22 +1,18 @@
-
 public abstract class Peice {
-
-    Peice[][] peiceArr;
     protected String peice;
     protected String color;
     protected String COLOR;
     protected int xPos;
     protected int yPos;
-
     protected int peiceNumber;
 
-    public Peice (String p, String c, int n, int x, int y, Peice[][] pA, String COLOR) {
+    public Peice (String p, String c, int n, int x, int y, String COLOR) {
         peice = p;
         color = c;
         peiceNumber = n;
         xPos = x;
         yPos = y;
-        peiceArr = pA;
+
         this.COLOR = COLOR;
     }
     public int getxPos(){
@@ -26,10 +22,6 @@ public abstract class Peice {
         return yPos;
     }
 
-
-    public String getColor() {
-        return color;
-    }
 
 
     public String getcolor(){
