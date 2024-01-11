@@ -2,8 +2,8 @@ import javax.swing.*;
 
 public class King extends Peice {
     public boolean kingHasmoved = false;
-    public King (String c, int n, int x, int y, Peice[][] pA, String COLOR) {
-        super("King", c, n, x, y, pA, COLOR);
+    public King (String c, int n, int x, int y, String COLOR) {
+        super("King", c, n, x, y, COLOR);
     }
 
 
@@ -18,9 +18,6 @@ public class King extends Peice {
             kingHasmoved = true;
             return true;
         } else {
-            super.xPos = dX;
-            super.yPos = dY;
-            kingHasmoved = true;
             return false;
         }
     }
@@ -77,4 +74,5 @@ public class King extends Peice {
             return false;
         }
     }
+
 }
