@@ -79,8 +79,8 @@ public class Chessboard extends JFrame implements ActionListener  {
         squares = new JButton[BOARD_SIZE][BOARD_SIZE];
         boardState = new String[BOARD_SIZE][BOARD_SIZE];
         boardPanel.setFont(new Font("Arial", Font.BOLD, 100));
-        Color c1 = new Color(0xFFF6EFCE, true);//rgb colors
-        Color c2 = new Color(0xFF568A38, true);//I wanted to make the board look nice
+        Color c1 = new Color(0xFFEEEED2, true);//rgb colors
+        Color c2 = new Color(0xFF769656, true);//I wanted to make the board look nice
         for (int row = 0; row < BOARD_SIZE; row++) {
             for (int col = 0; col < BOARD_SIZE; col++) {//creates 8 by 8 buttons
                 JButton square = new JButton();
@@ -124,8 +124,8 @@ public class Chessboard extends JFrame implements ActionListener  {
         squares[checkTempY][checkTempX].setBackground(tempColor);
         squares[checkTempY1][checkTempX1].setBackground(tempColor1);
 
-        Color c1 = new Color(0xFFF6EFCE, true);//rgb colors
-        Color c2 = new Color(0xFF568A38, true);//I wanted to make the board look nice
+        Color c1 = new Color(0xFFEEEED2, true);//rgb colors
+        Color c2 = new Color(0xFF769656, true);//I wanted to make the board look nice
 
         JButton clickedSquare = (JButton) e.getSource();
         int clickedRow = -1;
@@ -522,58 +522,69 @@ public class Chessboard extends JFrame implements ActionListener  {
                     }
                 }else {
                     if (peice.getcolor().equals("♚") && !wKing.kingHasmoved && (clickedCol==2 && !wRook1.RookHasMoved || clickedCol==6 && !wRook2.RookHasMoved)){
-                        if (wKing.validCastle(oldClickedCol, oldClickedRow, clickedCol, clickedRow, boardState)){
-                            peice.MovePiece(clickedCol, clickedRow);
-                            updateBoardState(peice.getxPos(), peice.getyPos(), oldClickedCol, oldClickedRow, peice);
-                            if (peice.getxPos()==2&&peice.getyPos()==0){
-                                wRook1.MovePiece(3, 0);
-                                updateBoardState(wRook1.getxPos(), wRook1.getyPos(), 0, 0, wRook1);
+                        if (!WhiteIsCheck()) {
+                            if (wKing.validCastle(oldClickedCol, oldClickedRow, clickedCol, clickedRow, boardState)) {
+                                peice.MovePiece(clickedCol, clickedRow);
+                                updateBoardState(peice.getxPos(), peice.getyPos(), oldClickedCol, oldClickedRow, peice);
+                                if (peice.getxPos() == 2 && peice.getyPos() == 0) {
+                                    wRook1.MovePiece(3, 0);
+                                    updateBoardState(wRook1.getxPos(), wRook1.getyPos(), 0, 0, wRook1);
 
-                            } else if (peice.getxPos()==6&&peice.getyPos()==0) {
-                                wRook2.MovePiece(5, 0);
-                                updateBoardState(wRook2.getxPos(), wRook2.getyPos(), 7, 0, wRook2);
-                            }
-                            if (playerTurn.equals("w")) {
-                                playerTurn = "b";
-                            } else {
-                                playerTurn = "w";
-                            }
-                            squares[oldClickedRow][oldClickedCol].setBorder(null);
-                            squares[oldClickedRow][oldClickedCol].setBackground(null);
-                            if ((oldClickedRow + oldClickedCol) % 2 == 0){
-                                squares[oldClickedRow][oldClickedCol].setBackground(c1);
-                            }else{
-                                squares[oldClickedRow][oldClickedCol].setBackground(c2);
-                            }
+                                } else if (peice.getxPos() == 6 && peice.getyPos() == 0) {
+                                    wRook2.MovePiece(5, 0);
+                                    updateBoardState(wRook2.getxPos(), wRook2.getyPos(), 7, 0, wRook2);
+                                }
+                                setError();
+                                if (playerTurn.equals("w")) {
+                                    playerTurn = "b";
+                                } else {
+                                    playerTurn = "w";
+                                }
+                                squares[oldClickedRow][oldClickedCol].setBorder(null);
+                                squares[oldClickedRow][oldClickedCol].setBackground(null);
+                                if ((oldClickedRow + oldClickedCol) % 2 == 0) {
+                                    squares[oldClickedRow][oldClickedCol].setBackground(c1);
+                                } else {
+                                    squares[oldClickedRow][oldClickedCol].setBackground(c2);
+                                }
 
-                            peice = null;
+                                peice = null;
+                            }
+                        }else{
+                            setCastleError();
                         }
                     } else if (peice.getcolor().equals("♔") && !bKing.kingHasmoved && (clickedCol==2&&!bRook1.RookHasMoved||clickedCol==6&&!bRook2.RookHasMoved)) {
-                        if (bKing.validCastle(oldClickedCol, oldClickedRow, clickedCol, clickedRow, boardState)){
-                            peice.MovePiece(clickedCol, clickedRow);
-                            updateBoardState(peice.getxPos(), peice.getyPos(), oldClickedCol, oldClickedRow, peice);
-                            if (peice.getxPos()==2&&peice.getyPos()==7){
-                                bRook1.MovePiece(3, 7);
-                                updateBoardState(bRook1.getxPos(), bRook1.getyPos(), 0, 7, bRook1);
+                        if (!BlackIsCheck()) {
 
-                            } else if (peice.getxPos()==6&&peice.getyPos()==7) {
-                                bRook2.MovePiece(5, 7);
-                                updateBoardState(bRook2.getxPos(), bRook2.getyPos(), 7, 7, bRook2);
-                            }
-                            if (playerTurn.equals("w")) {
-                                playerTurn = "b";
-                            } else {
-                                playerTurn = "w";
-                            }
-                            squares[oldClickedRow][oldClickedCol].setBorder(null);
-                            squares[oldClickedRow][oldClickedCol].setBackground(null);
-                            if ((oldClickedRow + oldClickedCol) % 2 == 0){
-                                squares[oldClickedRow][oldClickedCol].setBackground(c1);
-                            }else{
-                                squares[oldClickedRow][oldClickedCol].setBackground(c2);
-                            }
+                            if (bKing.validCastle(oldClickedCol, oldClickedRow, clickedCol, clickedRow, boardState)) {
+                                peice.MovePiece(clickedCol, clickedRow);
+                                updateBoardState(peice.getxPos(), peice.getyPos(), oldClickedCol, oldClickedRow, peice);
+                                if (peice.getxPos() == 2 && peice.getyPos() == 7) {
+                                    bRook1.MovePiece(3, 7);
+                                    updateBoardState(bRook1.getxPos(), bRook1.getyPos(), 0, 7, bRook1);
 
-                            peice = null;
+                                } else if (peice.getxPos() == 6 && peice.getyPos() == 7) {
+                                    bRook2.MovePiece(5, 7);
+                                    updateBoardState(bRook2.getxPos(), bRook2.getyPos(), 7, 7, bRook2);
+                                }
+                                setError();
+                                if (playerTurn.equals("w")) {
+                                    playerTurn = "b";
+                                } else {
+                                    playerTurn = "w";
+                                }
+                                squares[oldClickedRow][oldClickedCol].setBorder(null);
+                                squares[oldClickedRow][oldClickedCol].setBackground(null);
+                                if ((oldClickedRow + oldClickedCol) % 2 == 0) {
+                                    squares[oldClickedRow][oldClickedCol].setBackground(c1);
+                                } else {
+                                    squares[oldClickedRow][oldClickedCol].setBackground(c2);
+                                }
+
+                                peice = null;
+                            }
+                        }else{
+                            setCastleError();
                         }
                     } else if (peice instanceof Pawn && peice.COLOR.equals("w") && peice.getyPos()==3&&previousMoveNumber == clickedCol+1&&(previousMoveNumber==peice.xPos+2||previousMoveNumber==peice.xPos)) {
 //checks for enpassant
@@ -586,6 +597,7 @@ public class Chessboard extends JFrame implements ActionListener  {
                         previousMovePiece.color="";
                         updateBoardState(enPassanttempX, enPassanttempY, enPassanttempX, enPassanttempY, previousMovePiece);
                         previousMovePiece=null;
+                        setError();
                         if (playerTurn.equals("w")) {
                             playerTurn = "b";
                         } else {
@@ -612,6 +624,7 @@ public class Chessboard extends JFrame implements ActionListener  {
                         previousMovePiece.color="";
                         updateBoardState(enPassanttempX, enPassanttempY, enPassanttempX, enPassanttempY, previousMovePiece);
                         previousMovePiece=null;
+                        setError();
                         if (playerTurn.equals("w")) {
                             playerTurn = "b";
                         } else {
@@ -629,28 +642,9 @@ public class Chessboard extends JFrame implements ActionListener  {
 
                     else {
 
-
                         if (peice.validMove(oldClickedCol, oldClickedRow, clickedCol, clickedRow, boardState)) {
                             peice.MovePiece(clickedCol, clickedRow);
                             updateBoardState(peice.getxPos(), peice.getyPos(), oldClickedCol, oldClickedRow, peice);
-//                            if (playerTurn.equals("w")){
-//                                if (WhiteIsCheck()){
-//                                    tempColor1=squares[wKing.yPos][wKing.xPos].getBackground();
-//
-//                                    squares[wKing.yPos][wKing.xPos].setBackground(Color.red);
-//                                    checkTempX1 = wKing.xPos;
-//                                    checkTempY1 = wKing.yPos;
-//                                }
-//                            }else if(playerTurn.equals("b")){
-//                                if (BlackIsCheck()){
-//                                    tempColor1=squares[bKing.yPos][bKing.xPos].getBackground();
-//
-//                                    squares[bKing.yPos][bKing.xPos].setBackground(Color.red);
-//                                    checkTempX1= bKing.xPos;
-//                                    checkTempY1 = bKing.yPos;
-//                                }
-//
-//                            }
                             if (playerTurn.equals("w")){
                                 if (BlackIsCheck()){
                                     tempColor=squares[bKing.yPos][bKing.xPos].getBackground();
@@ -1174,5 +1168,44 @@ public class Chessboard extends JFrame implements ActionListener  {
             return true;
         }
         return false;
+    }
+    public void setError(){//just sets the
+        if (playerTurn.equals("w")){
+            if (WhiteIsCheck()){
+                tempColor1=squares[wKing.yPos][wKing.xPos].getBackground();
+
+                squares[wKing.yPos][wKing.xPos].setBackground(Color.red);
+                checkTempX1 = wKing.xPos;
+                checkTempY1 = wKing.yPos;
+            }
+        }else if(playerTurn.equals("b")){
+            if (BlackIsCheck()){
+                tempColor1=squares[bKing.yPos][bKing.xPos].getBackground();
+
+                squares[bKing.yPos][bKing.xPos].setBackground(Color.red);
+                checkTempX1= bKing.xPos;
+                checkTempY1 = bKing.yPos;
+            }
+        }
+    }
+    public void setCastleError(){
+        if (playerTurn.equals("w")){
+            if (BlackIsCheck()){
+                tempColor1=squares[bKing.yPos][bKing.xPos].getBackground();
+
+                squares[bKing.yPos][bKing.xPos].setBackground(Color.red);
+                checkTempX1= bKing.xPos;
+                checkTempY1 = bKing.yPos;
+            }
+        }else if(playerTurn.equals("b")){
+            if (WhiteIsCheck()){
+                tempColor1=squares[wKing.yPos][wKing.xPos].getBackground();
+
+                squares[wKing.yPos][wKing.xPos].setBackground(Color.red);
+                checkTempX1 = wKing.xPos;
+                checkTempY1 = wKing.yPos;
+
+            }
+        }
     }
 }
