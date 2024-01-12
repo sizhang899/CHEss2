@@ -7,10 +7,16 @@ import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 
 public class Chessboard extends JFrame implements ActionListener  {
+    int newTempX;
+    int newTempY;
     int enPassanttempX;
     int enPassanttempY ;
     int checkTempX;
     int checkTempY;
+    int checkTempX1;
+    int checkTempY1;
+    Color tempColor1 = new Color(0xFFF6EFCE, true);
+
     int previousMoveNumber;
     Color tempColor = new Color(0xFFF6EFCE, true);
     Peice previousMovePiece;
@@ -115,6 +121,9 @@ public class Chessboard extends JFrame implements ActionListener  {
 
     }
     public void actionPerformed(ActionEvent e) {
+        squares[checkTempY][checkTempX].setBackground(tempColor);
+        squares[checkTempY1][checkTempX1].setBackground(tempColor1);
+
         Color c1 = new Color(0xFFF6EFCE, true);//rgb colors
         Color c2 = new Color(0xFF568A38, true);//I wanted to make the board look nice
 
@@ -157,33 +166,34 @@ public class Chessboard extends JFrame implements ActionListener  {
                     } else if (!playerTurn.equals((deletedPeice = selectPiece(clickedCol, clickedRow)).getCOLOR())) {//if there is a piece that is not of your color then that means you want to capture it
                         if (peice.validCapture(oldClickedCol, oldClickedRow, clickedCol, clickedRow, boardState)) {
                             System.out.println("Captured "+deletedPeice+" with "+ peice + " at (" + peice.xPos + ", " + peice.yPos+")");
+                            newTempX = deletedPeice.xPos;
+                            newTempY=deletedPeice.yPos;
                             deletedPeice.yPos=-1;//the piece being captured will be not usable
                             deletedPeice.xPos=-1;//the piece being captured will be not usable
-                            deletedPeice.color="";//the piece being captured will be not usable
-                            deletedPeice=null;//the piece being captured will be not usable
+//                            deletedPeice.color="";//the piece being captured will be not usable
+//                            deletedPeice=null;//the piece being captured will be not usable
                             peice.MovePiece(clickedCol, clickedRow);//this way there will be no confusion for the computer
-                            if (playerTurn.equals("w")){
-                                if (BlackIsCheck()){
-                                    peice.MovePiece(oldClickedCol, oldClickedRow);
-                                }
-                            }else if(playerTurn.equals("b")){
-                               if (WhiteIsCheck()){
-                                    peice.MovePiece(oldClickedCol, oldClickedRow);
-                               }
-                            }
                             updateBoardState(peice.getxPos(),peice.getyPos(),oldClickedCol, oldClickedRow, peice);//updates chessboard
-                            squares[oldClickedRow][oldClickedCol].setBorder(null);
-                            squares[oldClickedRow][oldClickedCol].setBackground(null);
-                            if ((oldClickedRow + oldClickedCol) % 2 == 0){
-                                squares[oldClickedRow][oldClickedCol].setBackground(c1);
-                            }else{
-                                squares[oldClickedRow][oldClickedCol].setBackground(c2);
-                            }
-                            if (playerTurn.equals("w")){//switch turns
-                                playerTurn = "b";
-                            }else {
-                                playerTurn = "w";
-                            }
+//                            if (playerTurn.equals("w")){
+//                                if (WhiteIsCheck()){
+//                                    tempColor1=squares[wKing.yPos][wKing.xPos].getBackground();
+//
+//                                    squares[wKing.yPos][wKing.xPos].setBackground(Color.red);
+//                                    checkTempX1 = wKing.xPos;
+//                                    checkTempY1 = wKing.yPos;
+//                                }
+//                            }else if(playerTurn.equals("b")){
+//                                if (BlackIsCheck()){
+//                                    tempColor1=squares[bKing.yPos][bKing.xPos].getBackground();
+//
+//                                    squares[bKing.yPos][bKing.xPos].setBackground(Color.red);
+//                                    checkTempX1 = bKing.xPos;
+//                                    checkTempY1 = bKing.yPos;
+//                                }
+//
+//                            }
+
+
                             if (peice instanceof Pawn&& peice.COLOR.equals("w") &&peice.getyPos()==0){//checks for promotion
 
                                 String[] options = {"Queen", "Rook", "Bishop", "Knight"};
@@ -421,6 +431,82 @@ public class Chessboard extends JFrame implements ActionListener  {
                                     break;
                                 }
                             }
+                            if (playerTurn.equals("w")){
+                                if (BlackIsCheck()){
+                                    tempColor=squares[bKing.yPos][bKing.xPos].getBackground();
+                                    checkTempX = bKing.xPos;
+                                    checkTempY = bKing.yPos;
+                                    squares[bKing.yPos][bKing.xPos].setBackground(Color.red);
+
+                                    boardState[peice.getyPos()][peice.getxPos()]=deletedPeice.color;
+                                    squares[peice.getyPos()][peice.getxPos()].setText(deletedPeice.color);
+                                    peice.MovePiece(oldClickedCol, oldClickedRow);
+                                    deletedPeice.xPos=newTempX;
+                                    deletedPeice.yPos=newTempY;
+                                    boardState[oldClickedRow][oldClickedCol]=peice.color;
+                                    squares[oldClickedRow][oldClickedCol].setText(peice.color);
+
+
+                                    if (playerTurn.equals("w")) {
+                                        playerTurn = "b";
+                                    } else {
+                                        playerTurn = "w";
+                                    }
+                                }else {
+                                    if (WhiteIsCheck()){
+                                        tempColor1=squares[wKing.yPos][wKing.xPos].getBackground();
+
+                                        squares[wKing.yPos][wKing.xPos].setBackground(Color.red);
+                                        checkTempX1 = wKing.xPos;
+                                        checkTempY1 = wKing.yPos;
+                                    }
+                                    deletedPeice.yPos=-1;//the piece being captured will be not usable
+                                    deletedPeice.xPos=-1;//the piece being captured will be not usable
+                                    deletedPeice.color="";//the piece being captured will be not usable
+                                    deletedPeice=null;//the piece being captured will be not usable
+                                }
+                            }else if(playerTurn.equals("b")){
+                                if (WhiteIsCheck()){
+                                    tempColor=squares[wKing.yPos][wKing.xPos].getBackground();
+                                    checkTempX = wKing.xPos;
+                                    checkTempY = wKing.yPos;
+                                    squares[wKing.yPos][wKing.xPos].setBackground(Color.red);
+                                    boardState[peice.getyPos()][peice.getxPos()]=deletedPeice.color;
+                                    squares[peice.getyPos()][peice.getxPos()].setText(deletedPeice.color);
+                                    peice.MovePiece(oldClickedCol, oldClickedRow);
+                                    deletedPeice.xPos=newTempX;
+                                    deletedPeice.yPos=newTempY;
+                                    boardState[oldClickedRow][oldClickedCol]=peice.color;
+
+                                    squares[oldClickedRow][oldClickedCol].setText(peice.color);
+
+
+                                    if (playerTurn.equals("w")) {
+                                        playerTurn = "b";
+                                    } else {
+                                        playerTurn = "w";
+                                    }
+                                }else {
+                                    if (BlackIsCheck()){
+                                        tempColor1=squares[bKing.yPos][bKing.xPos].getBackground();
+
+                                        squares[bKing.yPos][bKing.xPos].setBackground(Color.red);
+                                        checkTempX1 = bKing.xPos;
+                                        checkTempY1 = bKing.yPos;
+                                    }
+                                    deletedPeice.yPos=-1;//the piece being captured will be not usable
+                                    deletedPeice.xPos=-1;//the piece being captured will be not usable
+                                    deletedPeice.color="";//the piece being captured will be not usable
+                                    deletedPeice=null;//the piece being captured will be not usable
+                                }
+                            }
+
+                            if (playerTurn.equals("w")){//switch turns
+                                playerTurn = "b";
+                            }else {
+                                playerTurn = "w";
+                            }
+
                             squares[oldClickedRow][oldClickedCol].setBorder(null);
                             squares[oldClickedRow][oldClickedCol].setBackground(null);
                             if ((oldClickedRow + oldClickedCol) % 2 == 0){
@@ -433,7 +519,6 @@ public class Chessboard extends JFrame implements ActionListener  {
                         }else {
                             JOptionPane.showMessageDialog(this, "Illegal capture", "Error", JOptionPane.ERROR_MESSAGE);
                         }
-
                     }
                 }else {
                     if (peice.getcolor().equals("♚") && !wKing.kingHasmoved && (clickedCol==2 && !wRook1.RookHasMoved || clickedCol==6 && !wRook2.RookHasMoved)){
@@ -541,14 +626,31 @@ public class Chessboard extends JFrame implements ActionListener  {
                         }
                         peice = null;
                     }
+
                     else {
 
 
                         if (peice.validMove(oldClickedCol, oldClickedRow, clickedCol, clickedRow, boardState)) {
-                            squares[checkTempY][checkTempX].setBackground(tempColor);
                             peice.MovePiece(clickedCol, clickedRow);
                             updateBoardState(peice.getxPos(), peice.getyPos(), oldClickedCol, oldClickedRow, peice);
-
+//                            if (playerTurn.equals("w")){
+//                                if (WhiteIsCheck()){
+//                                    tempColor1=squares[wKing.yPos][wKing.xPos].getBackground();
+//
+//                                    squares[wKing.yPos][wKing.xPos].setBackground(Color.red);
+//                                    checkTempX1 = wKing.xPos;
+//                                    checkTempY1 = wKing.yPos;
+//                                }
+//                            }else if(playerTurn.equals("b")){
+//                                if (BlackIsCheck()){
+//                                    tempColor1=squares[bKing.yPos][bKing.xPos].getBackground();
+//
+//                                    squares[bKing.yPos][bKing.xPos].setBackground(Color.red);
+//                                    checkTempX1= bKing.xPos;
+//                                    checkTempY1 = bKing.yPos;
+//                                }
+//
+//                            }
                             if (playerTurn.equals("w")){
                                 if (BlackIsCheck()){
                                     tempColor=squares[bKing.yPos][bKing.xPos].getBackground();
@@ -567,6 +669,14 @@ public class Chessboard extends JFrame implements ActionListener  {
                                         playerTurn = "b";
                                     } else {
                                         playerTurn = "w";
+                                    }
+                                }else{
+                                    if (WhiteIsCheck()){
+                                        tempColor1=squares[wKing.yPos][wKing.xPos].getBackground();
+
+                                        squares[wKing.yPos][wKing.xPos].setBackground(Color.red);
+                                        checkTempX1 = wKing.xPos;
+                                        checkTempY1 = wKing.yPos;
                                     }
                                 }
                             }else if(playerTurn.equals("b")){
@@ -587,6 +697,14 @@ public class Chessboard extends JFrame implements ActionListener  {
                                         playerTurn = "b";
                                     } else {
                                         playerTurn = "w";
+                                    }
+                                }else{
+                                    if (BlackIsCheck()){
+                                        tempColor1=squares[bKing.yPos][bKing.xPos].getBackground();
+
+                                        squares[bKing.yPos][bKing.xPos].setBackground(Color.red);
+                                        checkTempX1= bKing.xPos;
+                                        checkTempY1 = bKing.yPos;
                                     }
                                 }
                             }
