@@ -21,6 +21,19 @@ public class King extends Peice {
             return false;
         }
     }
+    public boolean validMoveCheckMate(int dX, int dY, int cX, int cY, String board[][]) {//difference is that this one checks if the space is empty
+
+        int deltaX = Math.abs(dX - cX);
+        int deltaY = Math.abs(dY - cY);
+        if ((deltaX == 1 || deltaY == 1) && (deltaX < 2 && deltaY < 2) && board[cY][cX].isEmpty()) {
+            super.xPos = dX;
+            super.yPos = dY;
+            kingHasmoved = true;
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     @Override
     public boolean validCapture(int dX, int dY, int cX, int cY, String[][] board) {
