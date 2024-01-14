@@ -7,6 +7,9 @@ import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 
 public class Chessboard extends JFrame implements ActionListener  {
+    int checkmateTempx;
+    int checkmateTempy;
+    Peice attackingPeice;
     int newTempX;
     int newTempY;
     int enPassanttempX;
@@ -31,7 +34,6 @@ public class Chessboard extends JFrame implements ActionListener  {
     private final JFrame frame;
     private final JButton[][] squares;
     private final String[][] boardState;
-    Peice test = new Pawn("", 10, 10, 10, "");
     Rook wRook1 = new Rook("♜", 1, 0, 0,  "b");
     Knight wKnight1 = new Knight("♞", 1, 1, 0,  "b");
     Bishop wBishop1 = new Bishop("♝", 1, 2, 0,  "b");
@@ -115,12 +117,20 @@ public class Chessboard extends JFrame implements ActionListener  {
         //Important (This method  does not change any positions or object data, only the board appearance)
         boardState[oldy][oldx]="";
         squares[oldy][oldx].setText("");
-        boardState[y][x]=newP.getcolor();
-        squares[y][x].setText(newP.getcolor());
+        if (newP != null){
+            boardState[y][x]=newP.getcolor();
+            squares[y][x].setText(newP.getcolor());
+        }else {
+            boardState[y][x]="";
+            squares[y][x].setText("");
+        }
+
 
 
     }
     public void actionPerformed(ActionEvent e) {
+
+
         squares[checkTempY][checkTempX].setBackground(tempColor);
         squares[checkTempY1][checkTempX1].setBackground(tempColor1);
 
@@ -523,65 +533,74 @@ public class Chessboard extends JFrame implements ActionListener  {
                 }else {
                     if (peice.getcolor().equals("♚") && !wKing.kingHasmoved && (clickedCol==2 && !wRook1.RookHasMoved || clickedCol==6 && !wRook2.RookHasMoved)){
                         if (!WhiteIsCheck()) {
-                            if (wKing.validCastle(oldClickedCol, oldClickedRow, clickedCol, clickedRow, boardState)) {
-                                peice.MovePiece(clickedCol, clickedRow);
-                                updateBoardState(peice.getxPos(), peice.getyPos(), oldClickedCol, oldClickedRow, peice);
-                                if (peice.getxPos() == 2 && peice.getyPos() == 0) {
-                                    wRook1.MovePiece(3, 0);
-                                    updateBoardState(wRook1.getxPos(), wRook1.getyPos(), 0, 0, wRook1);
+                            if ((clickedCol==2&&clickedRow==0&&!squareAttackedB(1,0)&&!squareAttackedB(2, 0)&&!squareAttackedB(3,0))||(clickedCol==6&&clickedRow==0&&!squareAttackedB(5,0)&&!squareAttackedB(6, 0))){
 
-                                } else if (peice.getxPos() == 6 && peice.getyPos() == 0) {
-                                    wRook2.MovePiece(5, 0);
-                                    updateBoardState(wRook2.getxPos(), wRook2.getyPos(), 7, 0, wRook2);
-                                }
-                                setError();
-                                if (playerTurn.equals("w")) {
-                                    playerTurn = "b";
-                                } else {
-                                    playerTurn = "w";
-                                }
-                                squares[oldClickedRow][oldClickedCol].setBorder(null);
-                                squares[oldClickedRow][oldClickedCol].setBackground(null);
-                                if ((oldClickedRow + oldClickedCol) % 2 == 0) {
-                                    squares[oldClickedRow][oldClickedCol].setBackground(c1);
-                                } else {
-                                    squares[oldClickedRow][oldClickedCol].setBackground(c2);
-                                }
+                                if (wKing.validCastle(oldClickedCol, oldClickedRow, clickedCol, clickedRow, boardState)) {
+                                    peice.MovePiece(clickedCol, clickedRow);
+                                    updateBoardState(peice.getxPos(), peice.getyPos(), oldClickedCol, oldClickedRow, peice);
+                                    if (peice.getxPos() == 2 && peice.getyPos() == 0) {
+                                        wRook1.MovePiece(3, 0);
+                                        updateBoardState(wRook1.getxPos(), wRook1.getyPos(), 0, 0, wRook1);
 
-                                peice = null;
+                                    } else if (peice.getxPos() == 6 && peice.getyPos() == 0) {
+                                        wRook2.MovePiece(5, 0);
+                                        updateBoardState(wRook2.getxPos(), wRook2.getyPos(), 7, 0, wRook2);
+                                    }
+                                    setError();
+                                    if (playerTurn.equals("w")) {
+                                        playerTurn = "b";
+                                    } else {
+                                        playerTurn = "w";
+                                    }
+                                    squares[oldClickedRow][oldClickedCol].setBorder(null);
+                                    squares[oldClickedRow][oldClickedCol].setBackground(null);
+                                    if ((oldClickedRow + oldClickedCol) % 2 == 0) {
+                                        squares[oldClickedRow][oldClickedCol].setBackground(c1);
+                                    } else {
+                                        squares[oldClickedRow][oldClickedCol].setBackground(c2);
+                                    }
+
+                                    peice = null;
+                                }
+                            }else{
+                                JOptionPane.showMessageDialog(null, "There is a piece attaking a square between King and Rook", "Castle Error", JOptionPane.ERROR_MESSAGE);
                             }
                         }else{
                             setCastleError();
                         }
                     } else if (peice.getcolor().equals("♔") && !bKing.kingHasmoved && (clickedCol==2&&!bRook1.RookHasMoved||clickedCol==6&&!bRook2.RookHasMoved)) {
                         if (!BlackIsCheck()) {
+                            if ((clickedCol==2&&clickedRow==7&&!squareAttackedW(1,7)&&!squareAttackedW(2, 7)&&!squareAttackedW(3,7))||(clickedCol==6&&clickedRow==7&&!squareAttackedW(5,7)&&!squareAttackedW(6, 7))){
+                                if (bKing.validCastle(oldClickedCol, oldClickedRow, clickedCol, clickedRow, boardState)) {
+                                    peice.MovePiece(clickedCol, clickedRow);
+                                    updateBoardState(peice.getxPos(), peice.getyPos(), oldClickedCol, oldClickedRow, peice);
+                                    if (peice.getxPos() == 2 && peice.getyPos() == 7) {
+                                        bRook1.MovePiece(3, 7);
+                                        updateBoardState(bRook1.getxPos(), bRook1.getyPos(), 0, 7, bRook1);
 
-                            if (bKing.validCastle(oldClickedCol, oldClickedRow, clickedCol, clickedRow, boardState)) {
-                                peice.MovePiece(clickedCol, clickedRow);
-                                updateBoardState(peice.getxPos(), peice.getyPos(), oldClickedCol, oldClickedRow, peice);
-                                if (peice.getxPos() == 2 && peice.getyPos() == 7) {
-                                    bRook1.MovePiece(3, 7);
-                                    updateBoardState(bRook1.getxPos(), bRook1.getyPos(), 0, 7, bRook1);
+                                    } else if (peice.getxPos() == 6 && peice.getyPos() == 7) {
+                                        bRook2.MovePiece(5, 7);
+                                        updateBoardState(bRook2.getxPos(), bRook2.getyPos(), 7, 7, bRook2);
+                                    }
+                                    setError();
+                                    if (playerTurn.equals("w")) {
+                                        playerTurn = "b";
+                                    } else {
+                                        playerTurn = "w";
+                                    }
+                                    squares[oldClickedRow][oldClickedCol].setBorder(null);
+                                    squares[oldClickedRow][oldClickedCol].setBackground(null);
+                                    if ((oldClickedRow + oldClickedCol) % 2 == 0) {
+                                        squares[oldClickedRow][oldClickedCol].setBackground(c1);
+                                    } else {
+                                        squares[oldClickedRow][oldClickedCol].setBackground(c2);
+                                    }
 
-                                } else if (peice.getxPos() == 6 && peice.getyPos() == 7) {
-                                    bRook2.MovePiece(5, 7);
-                                    updateBoardState(bRook2.getxPos(), bRook2.getyPos(), 7, 7, bRook2);
+                                    peice = null;
                                 }
-                                setError();
-                                if (playerTurn.equals("w")) {
-                                    playerTurn = "b";
-                                } else {
-                                    playerTurn = "w";
-                                }
-                                squares[oldClickedRow][oldClickedCol].setBorder(null);
-                                squares[oldClickedRow][oldClickedCol].setBackground(null);
-                                if ((oldClickedRow + oldClickedCol) % 2 == 0) {
-                                    squares[oldClickedRow][oldClickedCol].setBackground(c1);
-                                } else {
-                                    squares[oldClickedRow][oldClickedCol].setBackground(c2);
-                                }
+                            }else{
+                                JOptionPane.showMessageDialog(null, "There is a piece attaking a square between King and Rook", "Castle Error", JOptionPane.ERROR_MESSAGE);
 
-                                peice = null;
                             }
                         }else{
                             setCastleError();
@@ -976,14 +995,22 @@ public class Chessboard extends JFrame implements ActionListener  {
             }
 
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Not your turn, select piece first", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Not your turn, select piece first", "Error", JOptionPane.ERROR_MESSAGE);
         }
         if (bKing.getcolor().isEmpty()){
-            JOptionPane.showMessageDialog(this, "Black WON!");
+            JOptionPane.showMessageDialog(null, "Black WON!");
         }
         if (wKing.getcolor().isEmpty()){
-            JOptionPane.showMessageDialog(this, "White WON");
+            JOptionPane.showMessageDialog(null, "White WON");
         }
+        if (!BlackCheckMate()){
+            JOptionPane.showMessageDialog(null, "Black WON!");
+            frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+        }else if(!WhiteCheckMate()){
+            JOptionPane.showMessageDialog(null, "White WON!");
+            frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+        }
+
     }
     private void initializePieces() {
 
@@ -1099,77 +1126,256 @@ public class Chessboard extends JFrame implements ActionListener  {
     }
     public boolean WhiteIsCheck(){
         if (bPawn1.validCapture(bPawn1.xPos, bPawn1.yPos, wKing.xPos, wKing.yPos, boardState)){
+            attackingPeice = bPawn1;
             return true;
         }else if (bPawn2.validCapture(bPawn2.xPos, bPawn2.yPos, wKing.xPos, wKing.yPos, boardState)){
+            attackingPeice = bPawn2;
             return true;
         }if (bPawn3.validCapture(bPawn3.xPos, bPawn3.yPos, wKing.xPos, wKing.yPos, boardState)){
+            attackingPeice = bPawn3;
             return true;
         }if (bPawn4.validCapture(bPawn4.xPos, bPawn4.yPos, wKing.xPos, wKing.yPos, boardState)){
+            attackingPeice = bPawn4;
             return true;
         }if (bPawn5.validCapture(bPawn5.xPos, bPawn5.yPos, wKing.xPos, wKing.yPos, boardState)){
+            attackingPeice = bPawn5;
             return true;
         }if (bPawn6.validCapture(bPawn6.xPos, bPawn6.yPos, wKing.xPos, wKing.yPos, boardState)){
+            attackingPeice = bPawn6;
             return true;
         }if (bPawn7.validCapture(bPawn7.xPos, bPawn7.yPos, wKing.xPos, wKing.yPos, boardState)){
+            attackingPeice = bPawn7;
             return true;
         }if (bPawn8.validCapture(bPawn8.xPos, bPawn8.yPos, wKing.xPos, wKing.yPos, boardState)){
+            attackingPeice = bPawn8;
             return true;
         }if (bRook1.validCaptureCheck(bRook1.xPos, bRook1.yPos, wKing.xPos, wKing.yPos, boardState)){
+            attackingPeice = bRook1;
             return true;
         }if (bKnight1.validCapture(bKnight1.xPos, bKnight1.yPos, wKing.xPos, wKing.yPos, boardState)){
+            attackingPeice = bKnight1;
             return true;
         }if (bBishop1.validCaptureCheck(bBishop1.xPos, bBishop1.yPos, wKing.xPos, wKing.yPos, boardState)){
+            attackingPeice = bBishop1;
             return true;
         }if (bQueen.validCaptureCheck(bQueen.xPos, bQueen.yPos, wKing.xPos, wKing.yPos, boardState)){
+            attackingPeice = bQueen;
             return true;
         }if (bKing.validCapture(bKing.xPos, bKing.yPos, wKing.xPos, wKing.yPos, boardState)){
+            attackingPeice = bKing;
             return true;
         }if (bBishop2.validCaptureCheck(bBishop2.xPos, bBishop2.yPos, wKing.xPos, wKing.yPos, boardState)){
+            attackingPeice = bBishop2;
             return true;
         }if (bKnight2.validCapture(bKnight2.xPos, bKnight2.yPos, wKing.xPos, wKing.yPos, boardState)){
+            attackingPeice = bKnight2;
             return true;
         }if (bRook2.validCaptureCheck(bRook2.xPos, bRook2.yPos, wKing.xPos, wKing.yPos, boardState)){
+            attackingPeice = bRook2;
             return true;
         }
         return false;
     }
     public boolean BlackIsCheck(){
         if (wPawn1.validCapture(wPawn1.xPos, wPawn1.yPos, bKing.xPos, bKing.yPos, boardState)){
+            attackingPeice = wPawn1;
             return true;
         }else if (wPawn2.validCapture(wPawn2.xPos, wPawn2.yPos, bKing.xPos, bKing.yPos, boardState)){
+            attackingPeice = wPawn2;
             return true;
         }if (wPawn3.validCapture(wPawn3.xPos, wPawn3.yPos, bKing.xPos, bKing.yPos, boardState)){
+            attackingPeice = wPawn3;
             return true;
         }if (wPawn4.validCapture(wPawn4.xPos, wPawn4.yPos, bKing.xPos, bKing.yPos, boardState)){
+            attackingPeice = wPawn4;
             return true;
         }if (wPawn5.validCapture(wPawn5.xPos, wPawn5.yPos, bKing.xPos, bKing.yPos, boardState)){
+            attackingPeice = wPawn5;
             return true;
         }if (wPawn6.validCapture(wPawn6.xPos, wPawn6.yPos, bKing.xPos, bKing.yPos, boardState)){
+            attackingPeice = wPawn6;
             return true;
         }if (wPawn7.validCapture(wPawn7.xPos, wPawn7.yPos, bKing.xPos, bKing.yPos, boardState)){
+            attackingPeice = wPawn7;
             return true;
         }if (wPawn8.validCapture(wPawn8.xPos, wPawn8.yPos, bKing.xPos, bKing.yPos, boardState)){
+            attackingPeice = wPawn8;
             return true;
         }if (wRook1.validCaptureCheck(wRook1.xPos, wRook1.yPos, bKing.xPos, bKing.yPos, boardState)){
+            attackingPeice = wRook1;
             return true;
         }if (wKnight1.validCapture(wKnight1.xPos, wKnight1.yPos, bKing.xPos, bKing.yPos, boardState)){
+            attackingPeice = wKnight1;
             return true;
         }if (wBishop1.validCaptureCheck(wBishop1.xPos, wBishop1.yPos, bKing.xPos, bKing.yPos, boardState)){
+            attackingPeice = wBishop1;
             return true;
         }if (wQueen.validCaptureCheck(wQueen.xPos, wQueen.yPos, bKing.xPos, bKing.yPos, boardState)){
+            attackingPeice = wQueen;
             return true;
         }if (wKing.validCapture(wKing.xPos, wKing.yPos, bKing.xPos, bKing.yPos, boardState)){
+            attackingPeice = wKing;
             return true;
         }if (wBishop2.validCaptureCheck(wBishop2.xPos, wBishop2.yPos, bKing.xPos, bKing.yPos, boardState)){
+            attackingPeice = wBishop2;
             return true;
         }if (wKnight2.validCapture(wKnight2.xPos, wKnight2.yPos, bKing.xPos, bKing.yPos, boardState)){
+            attackingPeice = wKnight2;
             return true;
         }if (wRook2.validCaptureCheck(wRook2.xPos, wRook2.yPos, bKing.xPos, bKing.yPos, boardState)){
+            attackingPeice = wRook2;
             return true;
         }
         return false;
     }
-    public void setError(){//just sets the
+    public int amountAttackedB (int x, int y) {
+        int total = 0;
+        if (bPawn1.validCapture(bPawn1.xPos, bPawn1.yPos, x, y, boardState)){
+           total++;
+        }else if (bPawn2.validCapture(bPawn2.xPos, bPawn2.yPos, x, y, boardState)){
+            total++;
+        }if (bPawn3.validCapture(bPawn3.xPos, bPawn3.yPos, x, y, boardState)){
+            total++;
+        }if (bPawn4.validCapture(bPawn4.xPos, bPawn4.yPos, x, y, boardState)){
+            total++;
+        }if (bPawn5.validCapture(bPawn5.xPos, bPawn5.yPos, x, y, boardState)){
+            total++;
+        }if (bPawn6.validCapture(bPawn6.xPos, bPawn6.yPos, x, y, boardState)){
+            total++;
+        }if (bPawn7.validCapture(bPawn7.xPos, bPawn7.yPos, x, y, boardState)){
+            total++;
+        }if (bPawn8.validCapture(bPawn8.xPos, bPawn8.yPos, x, y, boardState)){
+            total++;
+        }if (bRook1.validCaptureCheck(bRook1.xPos, bRook1.yPos, x, y, boardState)){
+            total++;
+        }if (bKnight1.validCapture(bKnight1.xPos, bKnight1.yPos, x, y, boardState)){
+            total++;
+        }if (bBishop1.validCaptureCheck(bBishop1.xPos, bBishop1.yPos, x, y, boardState)){
+            total++;
+        }if (bQueen.validCaptureCheck(bQueen.xPos, bQueen.yPos, x, y, boardState)){
+            total++;
+        }if (bKing.validCapture(bKing.xPos, bKing.yPos, x, y, boardState)){
+            total++;
+        }if (bBishop2.validCaptureCheck(bBishop2.xPos, bBishop2.yPos, x, y, boardState)){
+            total++;
+        }if (bKnight2.validCapture(bKnight2.xPos, bKnight2.yPos, x, y, boardState)){
+            total++;
+        }if (bRook2.validCaptureCheck(bRook2.xPos, bRook2.yPos, x, y, boardState)){
+            total++;
+        }
+        return total;
+    }
+
+    public boolean squareAttackedB(int x, int y){
+        if (bPawn1.validCapture(bPawn1.xPos, bPawn1.yPos, x, y, boardState)){
+            return true;
+        }else if (bPawn2.validCapture(bPawn2.xPos, bPawn2.yPos, x, y, boardState)){
+            return true;
+        }if (bPawn3.validCapture(bPawn3.xPos, bPawn3.yPos, x, y, boardState)){
+            return true;
+        }if (bPawn4.validCapture(bPawn4.xPos, bPawn4.yPos, x, y, boardState)){
+            return true;
+        }if (bPawn5.validCapture(bPawn5.xPos, bPawn5.yPos, x, y, boardState)){
+            return true;
+        }if (bPawn6.validCapture(bPawn6.xPos, bPawn6.yPos, x, y, boardState)){
+            return true;
+        }if (bPawn7.validCapture(bPawn7.xPos, bPawn7.yPos, x, y, boardState)){
+            return true;
+        }if (bPawn8.validCapture(bPawn8.xPos, bPawn8.yPos, x, y, boardState)){
+            return true;
+        }if (bRook1.validCaptureCheck(bRook1.xPos, bRook1.yPos, x, y, boardState)){
+            return true;
+        }if (bKnight1.validCapture(bKnight1.xPos, bKnight1.yPos, x, y, boardState)){
+            return true;
+        }if (bBishop1.validCaptureCheck(bBishop1.xPos, bBishop1.yPos, x, y, boardState)){
+            return true;
+        }if (bQueen.validCaptureCheck(bQueen.xPos, bQueen.yPos, x, y, boardState)){
+            return true;
+        }if (bKing.validCapture(bKing.xPos, bKing.yPos, x, y, boardState)){
+            return true;
+        }if (bBishop2.validCaptureCheck(bBishop2.xPos, bBishop2.yPos, x, y, boardState)){
+            return true;
+        }if (bKnight2.validCapture(bKnight2.xPos, bKnight2.yPos, x, y, boardState)){
+            return true;
+        }if (bRook2.validCaptureCheck(bRook2.xPos, bRook2.yPos, x, y, boardState)){
+            return true;
+        }
+        return false;
+    }
+    public int amountAttackedW (int x, int y){
+        int total = 0;
+        if (wPawn1.validCapture(wPawn1.xPos, wPawn1.yPos, x, y, boardState)){
+            total++;
+        }else if (wPawn2.validCapture(wPawn2.xPos, wPawn2.yPos, x, y, boardState)){
+            total++;
+        }if (wPawn3.validCapture(wPawn3.xPos, wPawn3.yPos, x, y, boardState)){
+            total++;
+        }if (wPawn4.validCapture(wPawn4.xPos, wPawn4.yPos, x, y, boardState)){
+            total++;
+        }if (wPawn5.validCapture(wPawn5.xPos, wPawn5.yPos, x, y, boardState)){
+            total++;
+        }if (wPawn6.validCapture(wPawn6.xPos, wPawn6.yPos, x, y, boardState)){
+            total++;
+        }if (wPawn7.validCapture(wPawn7.xPos, wPawn7.yPos, x, y, boardState)){
+            total++;
+        }if (wPawn8.validCapture(wPawn8.xPos, wPawn8.yPos, x, y, boardState)){
+            total++;
+        }if (wRook1.validCaptureCheck(wRook1.xPos, wRook1.yPos, x, y, boardState)){
+            total++;
+        }if (wKnight1.validCapture(wKnight1.xPos, wKnight1.yPos, x, y, boardState)){
+            total++;
+        }if (wBishop1.validCaptureCheck(wBishop1.xPos, wBishop1.yPos, x, y, boardState)){
+            total++;
+        }if (wQueen.validCaptureCheck(wQueen.xPos, wQueen.yPos, x, y, boardState)){
+            total++;
+        }if (wKing.validCapture(wKing.xPos, wKing.yPos, x, y, boardState)){
+            total++;
+        }if (wBishop2.validCaptureCheck(wBishop2.xPos, wBishop2.yPos, x, y, boardState)){
+            total++;
+        }if (wKnight2.validCapture(wKnight2.xPos, wKnight2.yPos, x, y, boardState)){
+            total++;
+        }if (wRook2.validCaptureCheck(wRook2.xPos, wRook2.yPos, x, y, boardState)){
+            total++;
+        }
+        return total;
+    }
+    public boolean squareAttackedW(int x, int y){
+        if (wPawn1.validCapture(wPawn1.xPos, wPawn1.yPos, x, y, boardState)){
+            return true;
+        }else if (wPawn2.validCapture(wPawn2.xPos, wPawn2.yPos, x, y, boardState)){
+            return true;
+        }if (wPawn3.validCapture(wPawn3.xPos, wPawn3.yPos, x, y, boardState)){
+            return true;
+        }if (wPawn4.validCapture(wPawn4.xPos, wPawn4.yPos, x, y, boardState)){
+            return true;
+        }if (wPawn5.validCapture(wPawn5.xPos, wPawn5.yPos, x, y, boardState)){
+            return true;
+        }if (wPawn6.validCapture(wPawn6.xPos, wPawn6.yPos, x, y, boardState)){
+            return true;
+        }if (wPawn7.validCapture(wPawn7.xPos, wPawn7.yPos, x, y, boardState)){
+            return true;
+        }if (wPawn8.validCapture(wPawn8.xPos, wPawn8.yPos, x, y, boardState)){
+            return true;
+        }if (wRook1.validCaptureCheck(wRook1.xPos, wRook1.yPos, x, y, boardState)){
+            return true;
+        }if (wKnight1.validCapture(wKnight1.xPos, wKnight1.yPos, x, y, boardState)){
+            return true;
+        }if (wBishop1.validCaptureCheck(wBishop1.xPos, wBishop1.yPos, x, y, boardState)){
+            return true;
+        }if (wQueen.validCaptureCheck(wQueen.xPos, wQueen.yPos, x, y, boardState)){
+            return true;
+        }if (wKing.validCapture(wKing.xPos, wKing.yPos, x, y, boardState)){
+            return true;
+        }if (wBishop2.validCaptureCheck(wBishop2.xPos, wBishop2.yPos, x, y, boardState)){
+            return true;
+        }if (wKnight2.validCapture(wKnight2.xPos, wKnight2.yPos, x, y, boardState)){
+            return true;
+        }if (wRook2.validCaptureCheck(wRook2.xPos, wRook2.yPos, x, y, boardState)){
+            return true;
+        }
+        return false;
+    }
+    public void setError(){//just sets the red background
         if (playerTurn.equals("w")){
             if (WhiteIsCheck()){
                 tempColor1=squares[wKing.yPos][wKing.xPos].getBackground();
@@ -1192,7 +1398,6 @@ public class Chessboard extends JFrame implements ActionListener  {
         if (playerTurn.equals("w")){
             if (BlackIsCheck()){
                 tempColor1=squares[bKing.yPos][bKing.xPos].getBackground();
-
                 squares[bKing.yPos][bKing.xPos].setBackground(Color.red);
                 checkTempX1= bKing.xPos;
                 checkTempY1 = bKing.yPos;
@@ -1200,12 +1405,374 @@ public class Chessboard extends JFrame implements ActionListener  {
         }else if(playerTurn.equals("b")){
             if (WhiteIsCheck()){
                 tempColor1=squares[wKing.yPos][wKing.xPos].getBackground();
-
                 squares[wKing.yPos][wKing.xPos].setBackground(Color.red);
                 checkTempX1 = wKing.xPos;
                 checkTempY1 = wKing.yPos;
 
             }
         }
+    }
+    public boolean WhiteCheckMate(){
+//        if(WhiteIsCheck()){ orignial logic but it was overcomplicated for no reason
+//            for (int x = 0; x<8 ; x++){
+//                for (int y = 0; y<8; y++){
+//                    if((wKing.validMoveCheckMate(wKing.xPos, wKing.yPos, x, y, boardState)&&(!squareAttackedB(x,y)||!squareAttackedW(x,y)))||wKing.validCapture(wKing.xPos, wKing.yPos, x, y, boardState)&&(boardState[y][x].equals("♖"))){
+//                        oldClickedCol=wKing.xPos;
+//                        oldClickedRow=wKing.yPos;
+//                        deletedPeice = selectPiece(x, y);
+//                        wKing.MovePiece(x, y);
+//                        updateBoardState(wKing.getxPos(), wKing.getyPos(), oldClickedCol, oldClickedRow, wKing);
+//                        if(WhiteIsCheck()){
+//                            boardState[wKing.getyPos()][wKing.getxPos()]=deletedPeice.color;
+//                            squares[wKing.getyPos()][wKing.getxPos()].setText(deletedPeice.color);
+//                            wKing.MovePiece(oldClickedCol, oldClickedRow);
+//                            deletedPeice.xPos=newTempX;
+//                            deletedPeice.yPos=newTempY;
+//                            boardState[oldClickedRow][oldClickedCol]=wKing.color;
+//                            squares[oldClickedRow][oldClickedCol].setText(wKing.color);
+//                            deletedPeice = null;
+//                            return false;
+//                        }
+//                        if (deletedPeice == null){
+//                            boardState[wKing.getyPos()][wKing.getxPos()]="";
+//                            squares[wKing.getyPos()][wKing.getxPos()].setText("");
+//                        }else{
+//                            boardState[wKing.getyPos()][wKing.getxPos()]=deletedPeice.color;
+//                            squares[wKing.getyPos()][wKing.getxPos()].setText(deletedPeice.color);
+//                        }
+//
+//                        wKing.MovePiece(oldClickedCol, oldClickedRow);
+////                        deletedPeice.xPos=newTempX;
+////                        deletedPeice.yPos=newTempY;
+//                        boardState[oldClickedRow][oldClickedCol]=wKing.color;
+//                        squares[oldClickedRow][oldClickedCol].setText(wKing.color);
+//                        deletedPeice = null;
+//                        return true;
+//
+//                    }
+//                }
+//            }
+//        }else{
+//            return true;
+//        }
+//        return false;
+        if(WhiteIsCheck()){//much better
+            for (int x = 0; x<8 ; x++){
+                for (int y = 0; y<8; y++){
+                    if((wKing.validMoveCheckMate(wKing.xPos, wKing.yPos, y, x, boardState)&&(!squareAttackedB(y,x)))||((wKing.validCapture(wKing.xPos, wKing.yPos, y, x, boardState)&&((boardState[x][y].equals("♖"))||(boardState[x][y].equals("♘"))||(boardState[x][y].equals("♗"))||(boardState[x][y].equals("♕"))||(boardState[x][y].equals("♙")))&&amountAttackedB(y,x)==1)&&(!squareAttackedW(attackingPeice.xPos,attackingPeice.yPos)))||(amountAttackedW(attackingPeice.xPos,attackingPeice.yPos)>=1)&&(amountAttackedB(attackingPeice.xPos,attackingPeice.yPos)==1)){
+
+                        return true;
+                    }else {
+                        deletedPeice=selectPiece(x,y);
+
+                        checkmateTempx=wRook1.xPos;
+                        checkmateTempy=wRook1.yPos;
+                        updateBoardState(wRook1.xPos, wRook1.yPos, y, x, wRook1);
+                        if (WhiteIsCheck()){
+                            updateBoardState(checkmateTempx, checkmateTempy, y, x,  wRook1);
+                            updateBoardState(y, x, -1, -1, deletedPeice);
+                        }
+                        else {
+                            return true;
+                        }
+                        checkmateTempx=wRook2.xPos;
+                        checkmateTempy=wRook2.yPos;
+                        updateBoardState(wRook2.xPos, wRook2.yPos, y, x, wRook2);
+                        if (WhiteIsCheck()){
+                            updateBoardState(checkmateTempx, checkmateTempy, y, x,  wRook2);
+                            updateBoardState(y, x, -1, -1, deletedPeice);
+                        }
+                        else {
+                            return true;
+                        }
+                        checkmateTempx=wKnight1.xPos;
+                        checkmateTempy=wKnight1.yPos;
+                        updateBoardState(wKnight1.xPos, wKnight1.yPos, y, x, wKnight1);
+                        if (WhiteIsCheck()){
+                            updateBoardState(checkmateTempx, checkmateTempy, y, x,  wKnight1);
+                            updateBoardState(y, x, -1, -1, deletedPeice);
+                        }
+                        else {
+                            return true;
+                        }
+                        checkmateTempx=wKnight2.xPos;
+                        checkmateTempy=wKnight2.yPos;
+                        updateBoardState(wKnight2.xPos, wKnight2.yPos, y, x, wKnight2);
+                        if (WhiteIsCheck()){
+                            updateBoardState(checkmateTempx, checkmateTempy, y, x,  wKnight2);
+                            updateBoardState(y, x, -1, -1, deletedPeice);
+                        }
+                        else {
+                            return true;
+                        }
+                        checkmateTempx=wBishop1.xPos;
+                        checkmateTempy=wBishop1.yPos;
+                        updateBoardState(wBishop1.xPos, wBishop1.yPos, y, x, wBishop1);
+                        if (WhiteIsCheck()){
+                            updateBoardState(checkmateTempx, checkmateTempy, y, x,  wBishop1);
+                            updateBoardState(y, x, -1, -1, deletedPeice);
+                        }
+                        else {
+                            return true;
+                        }
+                        checkmateTempx=wBishop2.xPos;
+                        checkmateTempy=wBishop2.yPos;
+                        updateBoardState(wBishop2.xPos, wBishop2.yPos, y, x, wBishop2);
+                        if (WhiteIsCheck()){
+                            updateBoardState(checkmateTempx, checkmateTempy, y, x,  wBishop2);
+                            updateBoardState(y, x, -1, -1, deletedPeice);
+                        }
+                        else {
+                            return true;
+                        }
+                        checkmateTempx=wQueen.xPos;
+                        checkmateTempy=wQueen.yPos;
+                        updateBoardState(wQueen.xPos, wQueen.yPos, y, x, wQueen);
+                        if (WhiteIsCheck()){
+                            updateBoardState(checkmateTempx, checkmateTempy, y, x,  wQueen);
+                            updateBoardState(y, x, -1, -1, deletedPeice);
+                        }
+                        else {
+                            return true;
+                        }
+                        checkmateTempx=wPawn1.xPos;
+                        checkmateTempy=wPawn1.yPos;
+                        updateBoardState(wPawn1.xPos, wPawn1.yPos, y, x, wPawn1);
+                        if (WhiteIsCheck()){
+                            updateBoardState(checkmateTempx, checkmateTempy, y, x,  wPawn1);
+                            updateBoardState(y, x, -1, -1, deletedPeice);
+                        }
+                        else {
+                            return true;
+                        }
+                        checkmateTempx=wPawn2.xPos;
+                        checkmateTempy=wPawn2.yPos;
+                        updateBoardState(wPawn2.xPos, wPawn2.yPos, y, x, wPawn2);
+                        if (WhiteIsCheck()){
+                            updateBoardState(checkmateTempx, checkmateTempy, y, x,  wPawn2);
+                            updateBoardState(y, x, -1, -1, deletedPeice);
+                        }
+                        else {
+                            return true;
+                        }
+                        checkmateTempx=wPawn3.xPos;
+                        checkmateTempy=wPawn3.yPos;
+                        updateBoardState(wPawn3.xPos, wPawn3.yPos, y, x, wPawn3);
+                        if (WhiteIsCheck()){
+                            updateBoardState(checkmateTempx, checkmateTempy, y, x,  wPawn3);
+                            updateBoardState(y, x, -1, -1, deletedPeice);
+                        }
+                        else {
+                            return true;
+                        }
+                        checkmateTempx=wPawn4.xPos;
+                        checkmateTempy=wPawn4.yPos;
+                        updateBoardState(wPawn4.xPos, wPawn4.yPos, y, x, wPawn4);
+                        if (WhiteIsCheck()){
+                            updateBoardState(checkmateTempx, checkmateTempy, y, x,  wPawn4);
+                            updateBoardState(y, x, -1, -1, deletedPeice);
+                        }
+                        else {
+                            return true;
+                        }
+                        checkmateTempx=wPawn5.xPos;
+                        checkmateTempy=wPawn5.yPos;
+                        updateBoardState(wPawn5.xPos, wPawn5.yPos, y, x, wPawn5);
+                        if (WhiteIsCheck()){
+                            updateBoardState(checkmateTempx, checkmateTempy, y, x,  wPawn5);
+                            updateBoardState(y, x, -1, -1, deletedPeice);
+                        }
+                        else {
+                            return true;
+                        }
+                        checkmateTempx=wPawn6.xPos;
+                        checkmateTempy=wPawn6.yPos;
+                        updateBoardState(wPawn6.xPos, wPawn6.yPos, y, x, wPawn6);
+                        if (WhiteIsCheck()){
+                            updateBoardState(checkmateTempx, checkmateTempy, y, x,  wPawn6);
+                            updateBoardState(y, x, -1, -1, deletedPeice);
+                        }
+                        else {
+                            return true;
+                        }
+                        checkmateTempx=wPawn7.xPos;
+                        checkmateTempy=wPawn7.yPos;
+                        updateBoardState(wPawn7.xPos, wPawn7.yPos, y, x, wPawn7);
+                        if (WhiteIsCheck()){
+                            updateBoardState(checkmateTempx, checkmateTempy, y, x,  wPawn7);
+                            updateBoardState(y, x, -1, -1, deletedPeice);
+                        }
+                        else {
+                            return true;
+                        }
+                        checkmateTempx=wPawn8.xPos;
+                        checkmateTempy=wPawn8.yPos;
+                        updateBoardState(wPawn8.xPos, wPawn8.yPos, y, x, wPawn8);
+                        if (WhiteIsCheck()){
+                            updateBoardState(checkmateTempx, checkmateTempy, y, x,  wPawn8);
+                            updateBoardState(y, x, -1, -1, deletedPeice);
+                        }
+                        else {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }else{
+            return true;
+        }
+        return false;
+    }
+    public boolean BlackCheckMate(){
+        if(BlackIsCheck()){//much better
+            for (int x = 0; x<8 ; x++){
+                for (int y = 0; y<8; y++){
+                    if((bKing.validMoveCheckMate(bKing.xPos, bKing.yPos, y, x, boardState)&&(!squareAttackedW(y,x)))||(bKing.validCapture(bKing.xPos, bKing.yPos, y, x, boardState)&&((boardState[x][y].equals("♜"))||(boardState[x][y].equals("♞"))||(boardState[x][y].equals("♝"))||(boardState[x][y].equals("♛"))||(boardState[x][y].equals("♟")))&&amountAttackedW(y,x)==1)&&(squareAttackedB(attackingPeice.xPos,attackingPeice.yPos))||(amountAttackedB(attackingPeice.xPos,attackingPeice.yPos)>=1)&&(amountAttackedW(attackingPeice.xPos,attackingPeice.yPos)==1)){
+                        return true;
+                    }else {
+                        deletedPeice = selectPiece(x, y);
+
+                        checkmateTempx = bRook1.xPos;
+                        checkmateTempy = bRook1.yPos;
+                        updateBoardState(bRook1.xPos, bRook1.yPos, y, x, bRook1);
+                        if (WhiteIsCheck()) {
+                            updateBoardState(checkmateTempx, checkmateTempy, y, x, bRook1);
+                            updateBoardState(y, x, -1, -1, deletedPeice);
+                        } else {
+                            return true;
+                        }
+                        checkmateTempx = bRook2.xPos;
+                        checkmateTempy = bRook2.yPos;
+                        updateBoardState(bRook2.xPos, bRook2.yPos, y, x, bRook2);
+                        if (WhiteIsCheck()) {
+                            updateBoardState(checkmateTempx, checkmateTempy, y, x, bRook2);
+                            updateBoardState(y, x, -1, -1, deletedPeice);
+                        } else {
+                            return true;
+                        }
+                        checkmateTempx = bKnight1.xPos;
+                        checkmateTempy = bKnight1.yPos;
+                        updateBoardState(bKnight1.xPos, bKnight1.yPos, y, x, bKnight1);
+                        if (WhiteIsCheck()) {
+                            updateBoardState(checkmateTempx, checkmateTempy, y, x, bKnight1);
+                            updateBoardState(y, x, -1, -1, deletedPeice);
+                        } else {
+                            return true;
+                        }
+                        checkmateTempx = bKnight2.xPos;
+                        checkmateTempy = bKnight2.yPos;
+                        updateBoardState(bKnight2.xPos, bKnight2.yPos, y, x, bKnight2);
+                        if (WhiteIsCheck()) {
+                            updateBoardState(checkmateTempx, checkmateTempy, y, x, bKnight2);
+                            updateBoardState(y, x, -1, -1, deletedPeice);
+                        } else {
+                            return true;
+                        }
+                        checkmateTempx = bBishop1.xPos;
+                        checkmateTempy = bBishop1.yPos;
+                        updateBoardState(bBishop1.xPos, bBishop1.yPos, y, x, bBishop1);
+                        if (WhiteIsCheck()) {
+                            updateBoardState(checkmateTempx, checkmateTempy, y, x, bBishop1);
+                            updateBoardState(y, x, -1, -1, deletedPeice);
+                        } else {
+                            return true;
+                        }
+                        checkmateTempx = bBishop2.xPos;
+                        checkmateTempy = bBishop2.yPos;
+                        updateBoardState(bBishop2.xPos, bBishop2.yPos, y, x, bBishop2);
+                        if (WhiteIsCheck()) {
+                            updateBoardState(checkmateTempx, checkmateTempy, y, x, bBishop2);
+                            updateBoardState(y, x, -1, -1, deletedPeice);
+                        } else {
+                            return true;
+                        }
+                        checkmateTempx = bQueen.xPos;
+                        checkmateTempy = bQueen.yPos;
+                        updateBoardState(bQueen.xPos, bQueen.yPos, y, x, bQueen);
+                        if (WhiteIsCheck()) {
+                            updateBoardState(checkmateTempx, checkmateTempy, y, x, bQueen);
+                            updateBoardState(y, x, -1, -1, deletedPeice);
+                        } else {
+                            return true;
+                        }
+                        checkmateTempx = bPawn1.xPos;
+                        checkmateTempy = bPawn1.yPos;
+                        updateBoardState(bPawn1.xPos, bPawn1.yPos, y, x, bPawn1);
+                        if (WhiteIsCheck()) {
+                            updateBoardState(checkmateTempx, checkmateTempy, y, x, bPawn1);
+                            updateBoardState(y, x, -1, -1, deletedPeice);
+                        } else {
+                            return true;
+                        }
+                        checkmateTempx = bPawn2.xPos;
+                        checkmateTempy = bPawn2.yPos;
+                        updateBoardState(bPawn2.xPos, bPawn2.yPos, y, x, bPawn2);
+                        if (WhiteIsCheck()) {
+                            updateBoardState(checkmateTempx, checkmateTempy, y, x, bPawn2);
+                            updateBoardState(y, x, -1, -1, deletedPeice);
+                        } else {
+                            return true;
+                        }
+                        checkmateTempx = bPawn3.xPos;
+                        checkmateTempy = bPawn3.yPos;
+                        updateBoardState(bPawn3.xPos, bPawn3.yPos, y, x, bPawn3);
+                        if (WhiteIsCheck()) {
+                            updateBoardState(checkmateTempx, checkmateTempy, y, x, bPawn3);
+                            updateBoardState(y, x, -1, -1, deletedPeice);
+                        } else {
+                            return true;
+                        }
+                        checkmateTempx = bPawn4.xPos;
+                        checkmateTempy = bPawn4.yPos;
+                        updateBoardState(bPawn4.xPos, bPawn4.yPos, y, x, bPawn4);
+                        if (WhiteIsCheck()) {
+                            updateBoardState(checkmateTempx, checkmateTempy, y, x, bPawn4);
+                            updateBoardState(y, x, -1, -1, deletedPeice);
+                        } else {
+                            return true;
+                        }
+                        checkmateTempx = bPawn5.xPos;
+                        checkmateTempy = bPawn5.yPos;
+                        updateBoardState(bPawn5.xPos, bPawn5.yPos, y, x, bPawn5);
+                        if (WhiteIsCheck()) {
+                            updateBoardState(checkmateTempx, checkmateTempy, y, x, bPawn5);
+                            updateBoardState(y, x, -1, -1, deletedPeice);
+                        } else {
+                            return true;
+                        }
+                        checkmateTempx = bPawn6.xPos;
+                        checkmateTempy = bPawn6.yPos;
+                        updateBoardState(bPawn6.xPos, bPawn6.yPos, y, x, bPawn6);
+                        if (WhiteIsCheck()) {
+                            updateBoardState(checkmateTempx, checkmateTempy, y, x, bPawn6);
+                            updateBoardState(y, x, -1, -1, deletedPeice);
+                        } else {
+                            return true;
+                        }
+                        checkmateTempx = bPawn7.xPos;
+                        checkmateTempy = bPawn7.yPos;
+                        updateBoardState(bPawn7.xPos, bPawn7.yPos, y, x, bPawn7);
+                        if (WhiteIsCheck()) {
+                            updateBoardState(checkmateTempx, checkmateTempy, y, x, bPawn7);
+                            updateBoardState(y, x, -1, -1, deletedPeice);
+                        } else {
+                            return true;
+                        }
+                        checkmateTempx = bPawn8.xPos;
+                        checkmateTempy = bPawn8.yPos;
+                        updateBoardState(bPawn8.xPos, bPawn8.yPos, y, x, bPawn8);
+                        if (WhiteIsCheck()) {
+                            updateBoardState(checkmateTempx, checkmateTempy, y, x, bPawn8);
+                            updateBoardState(y, x, -1, -1, deletedPeice);
+                        } else {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }else{
+            return true;
+        }
+        return false;
     }
 }
