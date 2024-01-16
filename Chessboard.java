@@ -3,7 +3,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.concurrent.TimeUnit;
 import javax.swing.JFrame;
-import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 
 public class Chessboard extends JFrame implements ActionListener  {
@@ -1101,12 +1100,6 @@ public class Chessboard extends JFrame implements ActionListener  {
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Not your turn, select piece first", "Error", JOptionPane.ERROR_MESSAGE);
         }
-        if (bKing.getcolor().isEmpty()){
-            JOptionPane.showMessageDialog(null, "Black WON!");
-        }
-        if (wKing.getcolor().isEmpty()){
-            JOptionPane.showMessageDialog(null, "White WON");
-        }
         if (!BlackCheckMate()){
             JOptionPane.showMessageDialog(null, "Black WON!");
             frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
@@ -1229,28 +1222,28 @@ public class Chessboard extends JFrame implements ActionListener  {
         return null;
     }
     public boolean WhiteIsCheck(){
-        if (bPawn1.validCapture(bPawn1.xPos, bPawn1.yPos, wKing.xPos, wKing.yPos, boardState)){
+        if (bPawn1.validCaptureCheck(bPawn1.xPos, bPawn1.yPos, wKing.xPos, wKing.yPos, boardState)){
             attackingPeice = bPawn1;
             return true;
-        }else if (bPawn2.validCapture(bPawn2.xPos, bPawn2.yPos, wKing.xPos, wKing.yPos, boardState)){
+        }else if (bPawn2.validCaptureCheck(bPawn2.xPos, bPawn2.yPos, wKing.xPos, wKing.yPos, boardState)){
             attackingPeice = bPawn2;
             return true;
-        }if (bPawn3.validCapture(bPawn3.xPos, bPawn3.yPos, wKing.xPos, wKing.yPos, boardState)){
+        }if (bPawn3.validCaptureCheck(bPawn3.xPos, bPawn3.yPos, wKing.xPos, wKing.yPos, boardState)){
             attackingPeice = bPawn3;
             return true;
-        }if (bPawn4.validCapture(bPawn4.xPos, bPawn4.yPos, wKing.xPos, wKing.yPos, boardState)){
+        }if (bPawn4.validCaptureCheck(bPawn4.xPos, bPawn4.yPos, wKing.xPos, wKing.yPos, boardState)){
             attackingPeice = bPawn4;
             return true;
-        }if (bPawn5.validCapture(bPawn5.xPos, bPawn5.yPos, wKing.xPos, wKing.yPos, boardState)){
+        }if (bPawn5.validCaptureCheck(bPawn5.xPos, bPawn5.yPos, wKing.xPos, wKing.yPos, boardState)){
             attackingPeice = bPawn5;
             return true;
-        }if (bPawn6.validCapture(bPawn6.xPos, bPawn6.yPos, wKing.xPos, wKing.yPos, boardState)){
+        }if (bPawn6.validCaptureCheck(bPawn6.xPos, bPawn6.yPos, wKing.xPos, wKing.yPos, boardState)){
             attackingPeice = bPawn6;
             return true;
-        }if (bPawn7.validCapture(bPawn7.xPos, bPawn7.yPos, wKing.xPos, wKing.yPos, boardState)){
+        }if (bPawn7.validCaptureCheck(bPawn7.xPos, bPawn7.yPos, wKing.xPos, wKing.yPos, boardState)){
             attackingPeice = bPawn7;
             return true;
-        }if (bPawn8.validCapture(bPawn8.xPos, bPawn8.yPos, wKing.xPos, wKing.yPos, boardState)){
+        }if (bPawn8.validCaptureCheck(bPawn8.xPos, bPawn8.yPos, wKing.xPos, wKing.yPos, boardState)){
             attackingPeice = bPawn8;
             return true;
         }if (bRook1.validCaptureCheck(bRook1.xPos, bRook1.yPos, wKing.xPos, wKing.yPos, boardState)){
@@ -1281,28 +1274,28 @@ public class Chessboard extends JFrame implements ActionListener  {
         return false;
     }
     public boolean BlackIsCheck(){
-        if (wPawn1.validCapture(wPawn1.xPos, wPawn1.yPos, bKing.xPos, bKing.yPos, boardState)){
+        if (wPawn1.validCaptureCheck(wPawn1.xPos, wPawn1.yPos, bKing.xPos, bKing.yPos, boardState)){
             attackingPeice = wPawn1;
             return true;
-        }else if (wPawn2.validCapture(wPawn2.xPos, wPawn2.yPos, bKing.xPos, bKing.yPos, boardState)){
+        }else if (wPawn2.validCaptureCheck(wPawn2.xPos, wPawn2.yPos, bKing.xPos, bKing.yPos, boardState)){
             attackingPeice = wPawn2;
             return true;
-        }if (wPawn3.validCapture(wPawn3.xPos, wPawn3.yPos, bKing.xPos, bKing.yPos, boardState)){
+        }if (wPawn3.validCaptureCheck(wPawn3.xPos, wPawn3.yPos, bKing.xPos, bKing.yPos, boardState)){
             attackingPeice = wPawn3;
             return true;
-        }if (wPawn4.validCapture(wPawn4.xPos, wPawn4.yPos, bKing.xPos, bKing.yPos, boardState)){
+        }if (wPawn4.validCaptureCheck(wPawn4.xPos, wPawn4.yPos, bKing.xPos, bKing.yPos, boardState)){
             attackingPeice = wPawn4;
             return true;
-        }if (wPawn5.validCapture(wPawn5.xPos, wPawn5.yPos, bKing.xPos, bKing.yPos, boardState)){
+        }if (wPawn5.validCaptureCheck(wPawn5.xPos, wPawn5.yPos, bKing.xPos, bKing.yPos, boardState)){
             attackingPeice = wPawn5;
             return true;
-        }if (wPawn6.validCapture(wPawn6.xPos, wPawn6.yPos, bKing.xPos, bKing.yPos, boardState)){
+        }if (wPawn6.validCaptureCheck(wPawn6.xPos, wPawn6.yPos, bKing.xPos, bKing.yPos, boardState)){
             attackingPeice = wPawn6;
             return true;
-        }if (wPawn7.validCapture(wPawn7.xPos, wPawn7.yPos, bKing.xPos, bKing.yPos, boardState)){
+        }if (wPawn7.validCaptureCheck(wPawn7.xPos, wPawn7.yPos, bKing.xPos, bKing.yPos, boardState)){
             attackingPeice = wPawn7;
             return true;
-        }if (wPawn8.validCapture(wPawn8.xPos, wPawn8.yPos, bKing.xPos, bKing.yPos, boardState)){
+        }if (wPawn8.validCaptureCheck(wPawn8.xPos, wPawn8.yPos, bKing.xPos, bKing.yPos, boardState)){
             attackingPeice = wPawn8;
             return true;
         }if (wRook1.validCaptureCheck(wRook1.xPos, wRook1.yPos, bKing.xPos, bKing.yPos, boardState)){
@@ -1513,49 +1506,6 @@ public class Chessboard extends JFrame implements ActionListener  {
         }
     }
     public boolean WhiteCheckMate(){
-//        if(WhiteIsCheck()){ orignial logic but it was overcomplicated for no reason
-//            for (int x = 0; x<8 ; x++){
-//                for (int y = 0; y<8; y++){
-//                    if((wKing.validMoveCheckMate(wKing.xPos, wKing.yPos, x, y, boardState)&&(!squareAttackedB(x,y)||!squareAttackedW(x,y)))||wKing.validCapture(wKing.xPos, wKing.yPos, x, y, boardState)&&(boardState[y][x].equals("♖"))){
-//                        oldClickedCol=wKing.xPos;
-//                        oldClickedRow=wKing.yPos;
-//                        deletedPeice = selectPiece(x, y);
-//                        wKing.MovePiece(x, y);
-//                        updateBoardState(wKing.getxPos(), wKing.getyPos(), oldClickedCol, oldClickedRow, wKing);
-//                        if(WhiteIsCheck()){
-//                            boardState[wKing.getyPos()][wKing.getxPos()]=deletedPeice.color;
-//                            squares[wKing.getyPos()][wKing.getxPos()].setText(deletedPeice.color);
-//                            wKing.MovePiece(oldClickedCol, oldClickedRow);
-//                            deletedPeice.xPos=newTempX;
-//                            deletedPeice.yPos=newTempY;
-//                            boardState[oldClickedRow][oldClickedCol]=wKing.color;
-//                            squares[oldClickedRow][oldClickedCol].setText(wKing.color);
-//                            deletedPeice = null;
-//                            return false;
-//                        }
-//                        if (deletedPeice == null){
-//                            boardState[wKing.getyPos()][wKing.getxPos()]="";
-//                            squares[wKing.getyPos()][wKing.getxPos()].setText("");
-//                        }else{
-//                            boardState[wKing.getyPos()][wKing.getxPos()]=deletedPeice.color;
-//                            squares[wKing.getyPos()][wKing.getxPos()].setText(deletedPeice.color);
-//                        }
-//
-//                        wKing.MovePiece(oldClickedCol, oldClickedRow);
-////                        deletedPeice.xPos=newTempX;
-////                        deletedPeice.yPos=newTempY;
-//                        boardState[oldClickedRow][oldClickedCol]=wKing.color;
-//                        squares[oldClickedRow][oldClickedCol].setText(wKing.color);
-//                        deletedPeice = null;
-//                        return true;
-//
-//                    }
-//                }
-//            }
-//        }else{
-//            return true;
-//        }
-//        return false;
         if(WhiteIsCheck()){//much better
             emptyX = emptyX();
             emptyY = emptyY();
@@ -1566,7 +1516,7 @@ public class Chessboard extends JFrame implements ActionListener  {
                         return true;
                     }else {
                         deletedPeice=selectPiece(y,x);
-                        if  (wRook1.validMoveCheckMate(wRook1.xPos, wRook1.yPos, x, y, boardState)){//make sure the square to move is empty so no capture
+                        if  (wRook1.validMoveCheckMate(wRook1.xPos, wRook1.yPos, x, y, boardState)&&wRook1.color!=""){//make sure the square to move is empty so no capture
                             checkmateTempx=wRook1.xPos;
                             checkmateTempy=wRook1.yPos;
                             updateBoardState(x, y,wRook1.xPos, wRook1.yPos, wRook1);
@@ -1581,7 +1531,7 @@ public class Chessboard extends JFrame implements ActionListener  {
                             }
                         }
 
-                        if  (wRook2.validMoveCheckMate(wRook2.xPos, wRook2.yPos, x, y, boardState)) {
+                        if  (wRook2.validMoveCheckMate(wRook2.xPos, wRook2.yPos, x, y, boardState)&&wRook2.color!="") {
                             checkmateTempx = wRook2.xPos;
                             checkmateTempy = wRook2.yPos;
                             updateBoardState(x, y,wRook2.xPos, wRook2.yPos, wRook2);
@@ -1594,7 +1544,7 @@ public class Chessboard extends JFrame implements ActionListener  {
                                 return true;
                             }
                         }
-                        if  (wKnight1.validMoveCheckMate(wKnight1.xPos, wKnight1.yPos, x, y, boardState)) {
+                        if  (wKnight1.validMoveCheckMate(wKnight1.xPos, wKnight1.yPos, x, y, boardState)&&wKnight1.color!="") {
                             checkmateTempx = wKnight1.xPos;
                             checkmateTempy = wKnight1.yPos;
                             updateBoardState(x, y,wKnight1.xPos, wKnight1.yPos, wKnight1);
@@ -1607,7 +1557,7 @@ public class Chessboard extends JFrame implements ActionListener  {
                                 return true;
                             }
                         }
-                        if  (wKnight2.validMoveCheckMate(wKnight2.xPos, wKnight2.yPos, x, y, boardState)) {
+                        if  (wKnight2.validMoveCheckMate(wKnight2.xPos, wKnight2.yPos, x, y, boardState)&&wKnight2.color!="") {
                             checkmateTempx = wKnight2.xPos;
                             checkmateTempy = wKnight2.yPos;
                             updateBoardState(x, y,wKnight2.xPos, wKnight2.yPos, wKnight2);
@@ -1620,7 +1570,7 @@ public class Chessboard extends JFrame implements ActionListener  {
                                 return true;
                             }
                         }
-                        if  (wBishop1.validMoveCheckMate(wBishop1.xPos, wBishop1.yPos, x, y, boardState)) {
+                        if  (wBishop1.validMoveCheckMate(wBishop1.xPos, wBishop1.yPos, x, y, boardState)&&wBishop1.color!="") {
                             checkmateTempx = wBishop1.xPos;
                             checkmateTempy = wBishop1.yPos;
                             updateBoardState(x, y,bBishop1.xPos, bBishop1.yPos, bBishop1);
@@ -1633,7 +1583,7 @@ public class Chessboard extends JFrame implements ActionListener  {
                                 return true;
                             }
                         }
-                        if  (wBishop2.validMoveCheckMate(wBishop2.xPos, wBishop2.yPos, x, y, boardState)) {
+                        if  (wBishop2.validMoveCheckMate(wBishop2.xPos, wBishop2.yPos, x, y, boardState)&&wBishop2.color!="") {
                             checkmateTempx = wBishop2.xPos;
                             checkmateTempy = wBishop2.yPos;
                             updateBoardState(x, y,bBishop2.xPos, bBishop2.yPos, bBishop2);
@@ -1646,7 +1596,7 @@ public class Chessboard extends JFrame implements ActionListener  {
                                 return true;
                             }
                         }
-                        if  (wQueen.validMoveCheckMate(wQueen.xPos, wQueen.yPos, x, y, boardState)) {
+                        if  (wQueen.validMoveCheckMate(wQueen.xPos, wQueen.yPos, x, y, boardState)&&wQueen.color!="") {
                             checkmateTempx = wQueen.xPos;
                             checkmateTempy = wQueen.yPos;
                             updateBoardState(x, y,wQueen.xPos, wQueen.yPos, wQueen);
@@ -1659,7 +1609,7 @@ public class Chessboard extends JFrame implements ActionListener  {
                                 return true;
                             }
                         }
-                        if  (wPawn1.validMove(wPawn1.xPos, wPawn1.yPos, x, y, boardState)) {
+                        if  (wPawn1.validMove(wPawn1.xPos, wPawn1.yPos, x, y, boardState)&&wPawn1.color!="") {
                             checkmateTempx = wPawn1.xPos;
                             checkmateTempy = wPawn1.yPos;
                             updateBoardState(x, y,wPawn1.xPos, wPawn1.yPos, wPawn1);
@@ -1672,7 +1622,7 @@ public class Chessboard extends JFrame implements ActionListener  {
                                 return true;
                             }
                         }
-                        if  (wPawn2.validMove(wPawn2.xPos, wPawn2.yPos, x, y, boardState)) {
+                        if  (wPawn2.validMove(wPawn2.xPos, wPawn2.yPos, x, y, boardState)&&wPawn2.color!="") {
                             checkmateTempx = wPawn2.xPos;
                             checkmateTempy = wPawn2.yPos;
                             updateBoardState(x, y,wPawn2.xPos, wPawn2.yPos, wPawn2);
@@ -1685,7 +1635,7 @@ public class Chessboard extends JFrame implements ActionListener  {
                                 return true;
                             }
                         }
-                        if  (wPawn3.validMove(wPawn3.xPos, wPawn3.yPos, x, y, boardState)) {
+                        if  (wPawn3.validMove(wPawn3.xPos, wPawn3.yPos, x, y, boardState)&&wPawn3.color!="") {
                             checkmateTempx = wPawn3.xPos;
                             checkmateTempy = wPawn3.yPos;
                             updateBoardState(x, y,wPawn3.xPos, wPawn3.yPos, wPawn3);
@@ -1698,7 +1648,7 @@ public class Chessboard extends JFrame implements ActionListener  {
                                 return true;
                             }
                         }
-                        if  (wPawn4.validMove(wPawn4.xPos, wPawn4.yPos, x, y, boardState)) {
+                        if  (wPawn4.validMove(wPawn4.xPos, wPawn4.yPos, x, y, boardState)&&wPawn4.color!="") {
                             checkmateTempx = wPawn4.xPos;
                             checkmateTempy = wPawn4.yPos;
                             updateBoardState(x, y,wPawn4.xPos, wPawn4.yPos, wPawn4);
@@ -1711,7 +1661,7 @@ public class Chessboard extends JFrame implements ActionListener  {
                                 return true;
                             }
                         }
-                        if  (wPawn5.validMove(wPawn5.xPos, wPawn5.yPos, x, y, boardState)) {
+                        if  (wPawn5.validMove(wPawn5.xPos, wPawn5.yPos, x, y, boardState)&&wPawn5.color!="") {
                             checkmateTempx = wPawn5.xPos;
                             checkmateTempy = wPawn5.yPos;
                             updateBoardState(x, y,wPawn5.xPos, wPawn5.yPos, wPawn5);
@@ -1724,7 +1674,7 @@ public class Chessboard extends JFrame implements ActionListener  {
                                 return true;
                             }
                         }
-                        if  (wPawn6.validMove(wPawn6.xPos, wPawn6.yPos, x, y, boardState)) {
+                        if  (wPawn6.validMove(wPawn6.xPos, wPawn6.yPos, x, y, boardState)&&wPawn6.color!="") {
                             checkmateTempx = wPawn6.xPos;
                             checkmateTempy = wPawn6.yPos;
                             updateBoardState(x, y,wPawn6.xPos, wPawn6.yPos, wPawn6);
@@ -1737,7 +1687,7 @@ public class Chessboard extends JFrame implements ActionListener  {
                                 return true;
                             }
                         }
-                        if  (wPawn7.validMove(wPawn7.xPos, wPawn7.yPos, x, y, boardState)) {
+                        if  (wPawn7.validMove(wPawn7.xPos, wPawn7.yPos, x, y, boardState)&&wPawn7.color!="") {
                             checkmateTempx = wPawn7.xPos;
                             checkmateTempy = wPawn7.yPos;
                             updateBoardState(x, y,wPawn7.xPos, wPawn7.yPos, wPawn7);
@@ -1750,7 +1700,7 @@ public class Chessboard extends JFrame implements ActionListener  {
                                 return true;
                             }
                         }
-                        if  (wPawn8.validMove(wPawn8.xPos, wPawn8.yPos, x, y, boardState)) {
+                        if  (wPawn8.validMove(wPawn8.xPos, wPawn8.yPos, x, y, boardState)&&wPawn8.color!="") {
                             checkmateTempx = wPawn8.xPos;
                             checkmateTempy = wPawn8.yPos;
                             updateBoardState(x, y,wPawn8.xPos, wPawn8.yPos, wPawn8);
@@ -1784,7 +1734,7 @@ public class Chessboard extends JFrame implements ActionListener  {
                         return true;
                     }else {
                         deletedPeice=selectPiece(y,x);
-                        if  (bRook1.validMoveCheckMate(bRook1.xPos, bRook1.yPos, x, y, boardState)){//make sure the square to move is empty so no capture
+                        if  (bRook1.validMoveCheckMate(bRook1.xPos, bRook1.yPos, x, y, boardState)&&bRook1.color!=""){//make sure the square to move is empty so no capture
                             checkmateTempx=bRook1.xPos;
                             checkmateTempy=bRook1.yPos;
                             updateBoardState(x, y,bRook1.xPos, bRook1.yPos, bRook1);
@@ -1799,7 +1749,7 @@ public class Chessboard extends JFrame implements ActionListener  {
                             }
                         }
 
-                        if  (bRook2.validMoveCheckMate(bRook2.xPos, bRook2.yPos, x, y, boardState)) {
+                        if  (bRook2.validMoveCheckMate(bRook2.xPos, bRook2.yPos, x, y, boardState)&&bRook2.color!="") {
                             checkmateTempx = bRook2.xPos;
                             checkmateTempy = bRook2.yPos;
                             updateBoardState(x, y,bRook2.xPos, bRook2.yPos, bRook2);
@@ -1812,7 +1762,7 @@ public class Chessboard extends JFrame implements ActionListener  {
                                 return true;
                             }
                         }
-                        if  (bKnight1.validMoveCheckMate(bKnight1.xPos, bKnight1.yPos, x, y, boardState)) {
+                        if  (bKnight1.validMoveCheckMate(bKnight1.xPos, bKnight1.yPos, x, y, boardState)&&bKnight1.color!="") {
                             checkmateTempx = bKnight1.xPos;
                             checkmateTempy = bKnight1.yPos;
                             updateBoardState(x, y,bKnight1.xPos, bKnight1.yPos, bKnight1);
@@ -1825,7 +1775,7 @@ public class Chessboard extends JFrame implements ActionListener  {
                                 return true;
                             }
                         }
-                        if  (bKnight2.validMoveCheckMate(bKnight2.xPos, bKnight2.yPos, x, y, boardState)) {
+                        if  (bKnight2.validMoveCheckMate(bKnight2.xPos, bKnight2.yPos, x, y, boardState)&&bKnight2.color!="") {
                             checkmateTempx = bKnight2.xPos;
                             checkmateTempy = bKnight2.yPos;
                             updateBoardState(x, y,bKnight2.xPos, bKnight2.yPos, bKnight2);
@@ -1838,7 +1788,7 @@ public class Chessboard extends JFrame implements ActionListener  {
                                 return true;
                             }
                         }
-                        if  (bBishop1.validMoveCheckMate(bBishop1.xPos, bBishop1.yPos, x, y, boardState)) {
+                        if  (bBishop1.validMoveCheckMate(bBishop1.xPos, bBishop1.yPos, x, y, boardState)&&bBishop1.color!="") {
                             checkmateTempx = bBishop1.xPos;
                             checkmateTempy = bBishop1.yPos;
                             updateBoardState(x, y,bBishop1.xPos, bBishop1.yPos, bBishop1);
@@ -1851,7 +1801,7 @@ public class Chessboard extends JFrame implements ActionListener  {
                                 return true;
                             }
                         }
-                        if  (bBishop2.validMoveCheckMate(bBishop2.xPos, bBishop2.yPos, x, y, boardState)) {
+                        if  (bBishop2.validMoveCheckMate(bBishop2.xPos, bBishop2.yPos, x, y, boardState)&&bBishop2.color!="") {
                             checkmateTempx = bBishop2.xPos;
                             checkmateTempy = bBishop2.yPos;
                             updateBoardState(x, y,bBishop2.xPos, bBishop2.yPos, bBishop2);
@@ -1864,7 +1814,7 @@ public class Chessboard extends JFrame implements ActionListener  {
                                 return true;
                             }
                         }
-                        if  (bQueen.validMoveCheckMate(bQueen.xPos, bQueen.yPos, x, y, boardState)) {
+                        if  (bQueen.validMoveCheckMate(bQueen.xPos, bQueen.yPos, x, y, boardState)&&bQueen.color!="") {
                             checkmateTempx = bQueen.xPos;
                             checkmateTempy = bQueen.yPos;
                             updateBoardState(x, y,bQueen.xPos, bQueen.yPos, bQueen);
@@ -1877,7 +1827,7 @@ public class Chessboard extends JFrame implements ActionListener  {
                                 return true;
                             }
                         }
-                        if  (bPawn1.validMove(bPawn1.xPos, bPawn1.yPos, x, y, boardState)) {
+                        if  (bPawn1.validMove(bPawn1.xPos, bPawn1.yPos, x, y, boardState)&&bPawn1.color!="") {
                             checkmateTempx = bPawn1.xPos;
                             checkmateTempy = bPawn1.yPos;
                             updateBoardState(x, y,bPawn1.xPos, bPawn1.yPos, bPawn1);
@@ -1890,7 +1840,7 @@ public class Chessboard extends JFrame implements ActionListener  {
                                 return true;
                             }
                         }
-                        if  (bPawn2.validMove(bPawn2.xPos, bPawn2.yPos, x, y, boardState)) {
+                        if  (bPawn2.validMove(bPawn2.xPos, bPawn2.yPos, x, y, boardState)&&bPawn2.color!="") {
                             checkmateTempx = bPawn2.xPos;
                             checkmateTempy = bPawn2.yPos;
                             updateBoardState(x, y,bPawn2.xPos, bPawn2.yPos, bPawn2);
@@ -1903,7 +1853,7 @@ public class Chessboard extends JFrame implements ActionListener  {
                                 return true;
                             }
                         }
-                        if  (bPawn3.validMove(bPawn3.xPos, bPawn3.yPos, x, y, boardState)) {
+                        if  (bPawn3.validMove(bPawn3.xPos, bPawn3.yPos, x, y, boardState)&&bPawn3.color!="") {
                             checkmateTempx = bPawn3.xPos;
                             checkmateTempy = bPawn3.yPos;
                             updateBoardState(x, y,bPawn3.xPos, bPawn3.yPos, bPawn3);
@@ -1916,7 +1866,7 @@ public class Chessboard extends JFrame implements ActionListener  {
                                 return true;
                             }
                         }
-                        if  (bPawn4.validMove(bPawn4.xPos, bPawn4.yPos, x, y, boardState)) {
+                        if  (bPawn4.validMove(bPawn4.xPos, bPawn4.yPos, x, y, boardState)&&bPawn4.color!="") {
                             checkmateTempx = bPawn4.xPos;
                             checkmateTempy = bPawn4.yPos;
                             updateBoardState(x, y,bPawn4.xPos, bPawn4.yPos, bPawn4);
@@ -1929,7 +1879,7 @@ public class Chessboard extends JFrame implements ActionListener  {
                                 return true;
                             }
                         }
-                        if  (bPawn5.validMove(bPawn5.xPos, bPawn5.yPos, x, y, boardState)) {
+                        if  (bPawn5.validMove(bPawn5.xPos, bPawn5.yPos, x, y, boardState)&&bPawn5.color!="") {
                             checkmateTempx = bPawn5.xPos;
                             checkmateTempy = bPawn5.yPos;
                             updateBoardState(x, y,bPawn5.xPos, bPawn5.yPos, bPawn5);
@@ -1942,7 +1892,7 @@ public class Chessboard extends JFrame implements ActionListener  {
                                 return true;
                             }
                         }
-                        if  (bPawn6.validMove(bPawn6.xPos, bPawn6.yPos, x, y, boardState)) {
+                        if  (bPawn6.validMove(bPawn6.xPos, bPawn6.yPos, x, y, boardState)&&bPawn6.color!="") {
                             checkmateTempx = bPawn6.xPos;
                             checkmateTempy = bPawn6.yPos;
                             updateBoardState(x, y,bPawn6.xPos, bPawn6.yPos, bPawn6);
@@ -1955,7 +1905,7 @@ public class Chessboard extends JFrame implements ActionListener  {
                                 return true;
                             }
                         }
-                        if  (bPawn7.validMove(bPawn7.xPos, bPawn7.yPos, x, y, boardState)) {
+                        if  (bPawn7.validMove(bPawn7.xPos, bPawn7.yPos, x, y, boardState)&&bPawn7.color!="") {
                             checkmateTempx = bPawn7.xPos;
                             checkmateTempy = bPawn7.yPos;
                             updateBoardState(x, y,bPawn7.xPos, bPawn7.yPos, bPawn7);
@@ -1968,7 +1918,7 @@ public class Chessboard extends JFrame implements ActionListener  {
                                 return true;
                             }
                         }
-                        if  (bPawn8.validMove(bPawn8.xPos, bPawn8.yPos, x, y, boardState)) {
+                        if  (bPawn8.validMove(bPawn8.xPos, bPawn8.yPos, x, y, boardState)&&bPawn8.color!="") {
                             checkmateTempx = bPawn8.xPos;
                             checkmateTempy = bPawn8.yPos;
                             updateBoardState(x, y,bPawn8.xPos, bPawn8.yPos, bPawn8);
