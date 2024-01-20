@@ -1,7 +1,9 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.concurrent.TimeUnit;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import javax.swing.JFrame;
 import javax.swing.border.LineBorder;
 
@@ -35,7 +37,7 @@ public class Chessboard extends JFrame implements ActionListener  {
     private final JFrame frame;
     private final JButton[][] squares;
     private final String[][] boardState;
-    Rook wRook1 = new Rook("♜", 1, 0, 0,  "b");
+    Rook wRook1 = new Rook("♜", 1, 0, 0,  "b");//creates all objects
     Knight wKnight1 = new Knight("♞", 1, 1, 0,  "b");
     Bishop wBishop1 = new Bishop("♝", 1, 2, 0,  "b");
     Queen wQueen = new Queen("♛", 1, 3, 0,  "b");
@@ -73,8 +75,11 @@ public class Chessboard extends JFrame implements ActionListener  {
 
 
     public Chessboard(){
-
-        frame = new JFrame("Chewy's Chess Game");
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("SaveMoves"))) {//clears file
+            writer.flush();
+        } catch (IOException exception) {
+        }
+        frame = new JFrame("Chewy's Chess Game");//GUI creeation
         frame.setSize(SQUARE_SIZE * BOARD_SIZE, SQUARE_SIZE * BOARD_SIZE);
         frame.setResizable(false);
         JPanel boardPanel = new JPanel(new GridLayout(BOARD_SIZE, BOARD_SIZE));
@@ -84,28 +89,28 @@ public class Chessboard extends JFrame implements ActionListener  {
         boardPanel.setFont(new Font("Arial", Font.BOLD, 100));
         Color c1 = new Color(0xFFEEEED2, true);//rgb colors
         Color c2 = new Color(0xFF769656, true);//I wanted to make the board look nice
-        for (int row = 0; row < BOARD_SIZE; row++) {
+        for (int row = 0; row < BOARD_SIZE; row++) {//creates 8 by 8 buttons
             for (int col = 0; col < BOARD_SIZE; col++) {//creates 8 by 8 buttons
                 JButton square = new JButton();
+                square.setFocusable(false);
                 square.setPreferredSize(new Dimension(SQUARE_SIZE, SQUARE_SIZE));
-
-                if ((row + col) % 2 == 0){
-                    square.setBackground(c1);
+                if ((row + col) % 2 == 0){//if it is even white else green
+                    square.setBackground(c1);//white
                 }else{
-                    square.setBackground(c2);
+                    square.setBackground(c2);//green
                 }
-//                square.setBackground((row + col) % 2 == 0 ? c1 : c2);
                 square.addActionListener(this);
                 squares[row][col] = square;
                 boardPanel.add(square);
-                boardState[row][col] = "";
+                boardState[row][col] = "";//nothing on button
             }
         }
-        initializePieces();
+        initializePieces();//adds picture of pieces
         updateBoard();
         frame.add(boardPanel);
         frame.setVisible(true);
     }
+
     private void updateBoard() {//used to set up the buttons and board after the piece are created
         for (int row = 0; row < BOARD_SIZE; row++) {
             for (int col = 0; col < BOARD_SIZE; col++) {
@@ -114,12 +119,11 @@ public class Chessboard extends JFrame implements ActionListener  {
             }
         }
     }
-    public void refreshBoardState(){
+    public void refreshBoardState(){//just sets board pictures to respective pieces and piece positions
         if (wRook1.color!=""){
             boardState[wRook1.yPos][wRook1.xPos]=wRook1.color;
             squares[wRook1.yPos][wRook1.xPos].setText(wRook1.color);
-        }
-        if (wRook2.color!=""){
+        }if (wRook2.color!=""){
             boardState[wRook2.yPos][wRook2.xPos]=wRook1.color;
             squares[wRook2.yPos][wRook2.xPos].setText(wRook2.color);
         }if (wKnight1.color!=""){
@@ -227,27 +231,23 @@ public class Chessboard extends JFrame implements ActionListener  {
             boardState[y][x]="";
             squares[y][x].setText("");
         }
-
-
-
     }
     public void actionPerformed(ActionEvent e) {
 
-
-        squares[checkTempY][checkTempX].setBackground(tempColor);
+        squares[checkTempY][checkTempX].setBackground(tempColor);//reset background
         squares[checkTempY1][checkTempX1].setBackground(tempColor1);
 
         Color c1 = new Color(0xFFEEEED2, true);//rgb colors
         Color c2 = new Color(0xFF769656, true);//I wanted to make the board look nice
 
-        JButton clickedSquare = (JButton) e.getSource();
+        JButton clickedSquare = (JButton) e.getSource();// finds the button that was clicked
         int clickedRow = -1;
         int clickedCol = -1;
 
         //two for loops to find the x and y or row and column
         for (int row = 0; row < BOARD_SIZE; row++) {
             for (int col = 0; col < BOARD_SIZE; col++) {
-                if (clickedSquare == squares[row][col]) {
+                if (clickedSquare == squares[row][col]) {//if the clicked square is equal to the squares[row][col], row is clicked row and col is clicked col
                     clickedRow = row;
                     clickedCol = col;
                     break ;
@@ -277,37 +277,26 @@ public class Chessboard extends JFrame implements ActionListener  {
 
 
                     } else if (!playerTurn.equals((deletedPeice = selectPiece(clickedCol, clickedRow)).getCOLOR())) {//if there is a piece that is not of your color then that means you want to capture it
-                        if (peice.validCapture(oldClickedCol, oldClickedRow, clickedCol, clickedRow, boardState)) {
+                        if (peice.validCapture(oldClickedCol, oldClickedRow, clickedCol, clickedRow, boardState)) {//if it is valid capture
+
                             System.out.println("Captured "+deletedPeice+" with "+ peice + " at (" + peice.xPos + ", " + peice.yPos+")");
-                            newTempX = deletedPeice.xPos;
+                            newTempX = deletedPeice.xPos;//temp positions
                             newTempY=deletedPeice.yPos;
                             deletedPeice.yPos=-1;//the piece being captured will be not usable
                             deletedPeice.xPos=-1;//the piece being captured will be not usable
-//                            deletedPeice.color="";//the piece being captured will be not usable
-//                            deletedPeice=null;//the piece being captured will be not usable
                             peice.MovePiece(clickedCol, clickedRow);//this way there will be no confusion for the computer
                             updateBoardState(peice.getxPos(),peice.getyPos(),oldClickedCol, oldClickedRow, peice);//updates chessboard
-//                            if (playerTurn.equals("w")){
-//                                if (WhiteIsCheck()){
-//                                    tempColor1=squares[wKing.yPos][wKing.xPos].getBackground();
-//
-//                                    squares[wKing.yPos][wKing.xPos].setBackground(Color.red);
-//                                    checkTempX1 = wKing.xPos;
-//                                    checkTempY1 = wKing.yPos;
-//                                }
-//                            }else if(playerTurn.equals("b")){
-//                                if (BlackIsCheck()){
-//                                    tempColor1=squares[bKing.yPos][bKing.xPos].getBackground();
-//
-//                                    squares[bKing.yPos][bKing.xPos].setBackground(Color.red);
-//                                    checkTempX1 = bKing.xPos;
-//                                    checkTempY1 = bKing.yPos;
-//                                }
-//
-//                            }
+                            try (BufferedWriter writer = new BufferedWriter(new FileWriter("SaveMoves", true))) {
+
+                                writer.write(peice+(peice.peiceNumber + " "+ peice.xPos + " " + peice.yPos));//writes the move to the file
+                                writer.newLine();
+
+                            } catch (IOException exception) {
+                            }
 
 
-                            if (peice instanceof Pawn&& peice.COLOR.equals("w") &&peice.getyPos()==0){//checks for promotion
+
+                            if (peice instanceof Pawn&& peice.COLOR.equals("w") &&peice.getyPos()==0){//checks for promotion upon capture
 
                                 String[] options = {"Queen", "Rook", "Bishop", "Knight"};
                                 int choice = JOptionPane.showOptionDialog(null, "Choose a piece to promote to:", "Pawn Promotion",
@@ -316,7 +305,7 @@ public class Chessboard extends JFrame implements ActionListener  {
                                 // Processing the user's choice
                                 switch (choice) {
 
-                                case 1:
+                                case 1://the pawn that reaches the end will be give a new identity
                                     if (peice.peiceNumber == 1 && peice.COLOR.equals("w")) {
                                         bPawn1 = new Rook("♖", 1, clickedCol, clickedRow,  "w");
                                         updateBoardState(bPawn1.xPos, bPawn1.yPos, oldClickedCol, oldClickedRow, bPawn1);
@@ -544,7 +533,7 @@ public class Chessboard extends JFrame implements ActionListener  {
                                     break;
                                 }
                             }
-                            if (playerTurn.equals("w")){
+                            if (playerTurn.equals("w")){//after promotion if in check highlight red
                                 if (BlackIsCheck()){
                                     tempColor=squares[bKing.yPos][bKing.xPos].getBackground();
                                     checkTempX = bKing.xPos;
@@ -620,7 +609,7 @@ public class Chessboard extends JFrame implements ActionListener  {
                                 playerTurn = "w";
                             }
 
-                            squares[oldClickedRow][oldClickedCol].setBorder(null);
+                            squares[oldClickedRow][oldClickedCol].setBorder(null);//clears the selected border and square colors
                             squares[oldClickedRow][oldClickedCol].setBackground(null);
                             if ((oldClickedRow + oldClickedCol) % 2 == 0){
                                 squares[oldClickedRow][oldClickedCol].setBackground(c1);
@@ -629,33 +618,55 @@ public class Chessboard extends JFrame implements ActionListener  {
                             }
                             peice = null;//clears peice to null so the value resets
                             System.out.println("turn = "+playerTurn);
-                        }else {
+                        }else {//capture is illegal
                             JOptionPane.showMessageDialog(this, "Illegal capture", "Error", JOptionPane.ERROR_MESSAGE);
                         }
                     }
-                }else {
-                    if (peice.getcolor().equals("♚") && !wKing.kingHasmoved && (clickedCol==2 && !wRook1.RookHasMoved || clickedCol==6 && !wRook2.RookHasMoved)){
-                        if (!WhiteIsCheck()) {
-                            if ((clickedCol==2&&clickedRow==0&&!squareAttackedB(1,0)&&!squareAttackedB(2, 0)&&!squareAttackedB(3,0))||(clickedCol==6&&clickedRow==0&&!squareAttackedB(5,0)&&!squareAttackedB(6, 0))){
+                }else {//now the clicked square is empty
+                    if (peice.getcolor().equals("♚") && !wKing.kingHasmoved && (clickedCol==2 && !wRook1.RookHasMoved || clickedCol==6 && !wRook2.RookHasMoved)){//Castling
+                        if (!WhiteIsCheck()) {//not in check
+                            if ((clickedCol==2&&clickedRow==0&&!squareAttackedB(1,0)&&!squareAttackedB(2, 0)&&!squareAttackedB(3,0))||(clickedCol==6&&clickedRow==0&&!squareAttackedB(5,0)&&!squareAttackedB(6, 0))){//Squares in between not attacked
 
-                                if (wKing.validCastle(oldClickedCol, oldClickedRow, clickedCol, clickedRow, boardState)) {
-                                    peice.MovePiece(clickedCol, clickedRow);
+                                if (wKing.validCastle(oldClickedCol, oldClickedRow, clickedCol, clickedRow, boardState)) {//if valid castle
+
+                                    peice.MovePiece(clickedCol, clickedRow);//move
+                                    try (BufferedWriter writer = new BufferedWriter(new FileWriter("SaveMoves", true))) {//save to file for game review
+
+                                        writer.write(peice + (peice.peiceNumber + " " + peice.xPos + " "+peice.yPos));
+                                        writer.newLine();
+
+                                    } catch (IOException exception) {
+                                    }
                                     updateBoardState(peice.getxPos(), peice.getyPos(), oldClickedCol, oldClickedRow, peice);
-                                    if (peice.getxPos() == 2 && peice.getyPos() == 0) {
-                                        wRook1.MovePiece(3, 0);
+                                    if (peice.getxPos() == 2 && peice.getyPos() == 0) {//if going to left side
+                                        wRook1.MovePiece(3, 0);//left side rook move
+                                        try (BufferedWriter writer = new BufferedWriter(new FileWriter("SaveMoves", true))) {
+
+                                            writer.write(wRook1 + (1 + " " + 3+ " "+0));
+                                            writer.newLine();
+
+                                        } catch (IOException exception) {
+                                        }
                                         updateBoardState(wRook1.getxPos(), wRook1.getyPos(), 0, 0, wRook1);
 
-                                    } else if (peice.getxPos() == 6 && peice.getyPos() == 0) {
-                                        wRook2.MovePiece(5, 0);
+                                    } else if (peice.getxPos() == 6 && peice.getyPos() == 0) {//right side
+                                        wRook2.MovePiece(5, 0);//right side rook be moving
+                                        try (BufferedWriter writer = new BufferedWriter(new FileWriter("SaveMoves", true))) {
+
+                                            writer.write(wRook2 + (2 + " " + 5 + " "+0));
+                                            writer.newLine();
+
+                                        } catch (IOException exception) {
+                                        }
                                         updateBoardState(wRook2.getxPos(), wRook2.getyPos(), 7, 0, wRook2);
                                     }
-                                    setError();
+                                    setError();//if checking opponent with rook
                                     if (playerTurn.equals("w")) {
                                         playerTurn = "b";
                                     } else {
                                         playerTurn = "w";
                                     }
-                                    squares[oldClickedRow][oldClickedCol].setBorder(null);
+                                    squares[oldClickedRow][oldClickedCol].setBorder(null);//resets highlights boarders
                                     squares[oldClickedRow][oldClickedCol].setBackground(null);
                                     if ((oldClickedRow + oldClickedCol) % 2 == 0) {
                                         squares[oldClickedRow][oldClickedCol].setBackground(c1);
@@ -665,24 +676,45 @@ public class Chessboard extends JFrame implements ActionListener  {
 
                                     peice = null;
                                 }
-                            }else{
+                            }else{//the condition of nothing in between attacked is false
                                 JOptionPane.showMessageDialog(null, "There is a piece attaking a square between King and Rook", "Castle Error", JOptionPane.ERROR_MESSAGE);
                             }
                         }else{
                             setCastleError();
                         }
-                    } else if (peice.getcolor().equals("♔") && !bKing.kingHasmoved && (clickedCol==2&&!bRook1.RookHasMoved||clickedCol==6&&!bRook2.RookHasMoved)) {
-                        if (!BlackIsCheck()) {
+                    } else if (peice.getcolor().equals("♔") && !bKing.kingHasmoved && (clickedCol==2&&!bRook1.RookHasMoved||clickedCol==6&&!bRook2.RookHasMoved)) {//castling but other color
+                        if (!BlackIsCheck()) {//can't castle during check
                             if ((clickedCol==2&&clickedRow==7&&!squareAttackedW(1,7)&&!squareAttackedW(2, 7)&&!squareAttackedW(3,7))||(clickedCol==6&&clickedRow==7&&!squareAttackedW(5,7)&&!squareAttackedW(6, 7))){
                                 if (bKing.validCastle(oldClickedCol, oldClickedRow, clickedCol, clickedRow, boardState)) {
                                     peice.MovePiece(clickedCol, clickedRow);
+                                    try (BufferedWriter writer = new BufferedWriter(new FileWriter("SaveMoves", true))) {
+
+                                        writer.write(peice + (1 + " " + peice.xPos + " "+peice.yPos));
+                                        writer.newLine();
+
+                                    } catch (IOException exception) {
+                                    }
                                     updateBoardState(peice.getxPos(), peice.getyPos(), oldClickedCol, oldClickedRow, peice);
-                                    if (peice.getxPos() == 2 && peice.getyPos() == 7) {
+                                    if (peice.getxPos() == 2 && peice.getyPos() == 7) {//castsle to the left
                                         bRook1.MovePiece(3, 7);
+                                        try (BufferedWriter writer = new BufferedWriter(new FileWriter("SaveMoves", true))) {
+
+                                            writer.write(bRook1 + (1 + " " + 3 + " "+7));
+                                            writer.newLine();
+
+                                        } catch (IOException exception) {
+                                        }
                                         updateBoardState(bRook1.getxPos(), bRook1.getyPos(), 0, 7, bRook1);
 
-                                    } else if (peice.getxPos() == 6 && peice.getyPos() == 7) {
+                                    } else if (peice.getxPos() == 6 && peice.getyPos() == 7) {//castle to the right
                                         bRook2.MovePiece(5, 7);
+                                        try (BufferedWriter writer = new BufferedWriter(new FileWriter("SaveMoves", true))) {
+
+                                            writer.write(bRook2 + (2 + " " + 5 + " "+7));
+                                            writer.newLine();
+
+                                        } catch (IOException exception) {
+                                        }
                                         updateBoardState(bRook2.getxPos(), bRook2.getyPos(), 7, 7, bRook2);
                                     }
                                     setError();
@@ -691,7 +723,7 @@ public class Chessboard extends JFrame implements ActionListener  {
                                     } else {
                                         playerTurn = "w";
                                     }
-                                    squares[oldClickedRow][oldClickedCol].setBorder(null);
+                                    squares[oldClickedRow][oldClickedCol].setBorder(null);//resets the border and backgrounds
                                     squares[oldClickedRow][oldClickedCol].setBackground(null);
                                     if ((oldClickedRow + oldClickedCol) % 2 == 0) {
                                         squares[oldClickedRow][oldClickedCol].setBackground(c1);
@@ -703,13 +735,14 @@ public class Chessboard extends JFrame implements ActionListener  {
                                 }
                             }else{
                                 JOptionPane.showMessageDialog(null, "There is a piece attaking a square between King and Rook", "Castle Error", JOptionPane.ERROR_MESSAGE);
-
                             }
                         }else{
                             setCastleError();
                         }
-                    } else if (peice instanceof Pawn && peice.COLOR.equals("w") && peice.getyPos()==3&&previousMoveNumber == clickedCol+1&&(previousMoveNumber==peice.xPos+2||previousMoveNumber==peice.xPos)) {
+                    } else if (peice instanceof Pawn && peice.COLOR.equals("w") && peice.getyPos()==3&&previousMoveNumber == clickedCol+1&&(previousMoveNumber==peice.xPos+2||previousMoveNumber==peice.xPos)) {//en passant
 //checks for enpassant
+                        //if the piece is a white pawn and y is 3, the clickedcol is the previous move number +1 because index is -1, if the previous pawn number is one to the right or left of your pawn
+
                         peice.MovePiece(clickedCol, clickedRow);
                         updateBoardState(peice.getxPos(), peice.getyPos(), oldClickedCol, oldClickedRow, peice);
                         enPassanttempX = previousMovePiece.xPos;
@@ -736,7 +769,7 @@ public class Chessboard extends JFrame implements ActionListener  {
 
                         peice = null;
                     }else if (peice instanceof Pawn && peice.COLOR.equals("b") && peice.getyPos()==4&&previousMoveNumber == clickedCol+1&&(previousMoveNumber==peice.xPos+2||previousMoveNumber==peice.xPos)) {
-
+//if the piece is a black pawn and y is 4, the clickedcol is the previous move number +1 because index is -1, if the previous pawn number is one to the right or left of your pawn
                         peice.MovePiece(clickedCol, clickedRow);
                         updateBoardState(peice.getxPos(), peice.getyPos(), oldClickedCol, oldClickedRow, peice);
                         enPassanttempX = previousMovePiece.xPos;
@@ -764,10 +797,10 @@ public class Chessboard extends JFrame implements ActionListener  {
 
                     else {
 
-                        if (peice.validMove(oldClickedCol, oldClickedRow, clickedCol, clickedRow, boardState)) {
+                        if (peice.validMove(oldClickedCol, oldClickedRow, clickedCol, clickedRow, boardState)) {//perform normal move
                             peice.MovePiece(clickedCol, clickedRow);
                             updateBoardState(peice.getxPos(), peice.getyPos(), oldClickedCol, oldClickedRow, peice);
-                            if (playerTurn.equals("w")){
+                            if (playerTurn.equals("w")){//look for checks
                                 if (BlackIsCheck()){
                                     tempColor=squares[bKing.yPos][bKing.xPos].getBackground();
                                     checkTempX = bKing.xPos;
@@ -827,10 +860,17 @@ public class Chessboard extends JFrame implements ActionListener  {
 
 
 
-                            if (playerTurn.equals("w")) {
+                            if (playerTurn.equals("w")) {//switch turns
                                 playerTurn = "b";
                             } else {
                                 playerTurn = "w";
+                            }
+                            try (BufferedWriter writer = new BufferedWriter(new FileWriter("SaveMoves", true))) {
+
+                                writer.write(peice + (peice.peiceNumber + " " + peice.xPos + " "+peice.yPos));
+                                writer.newLine();
+
+                            } catch (IOException exception) {
                             }
                             System.out.println(peice + " moved to ("+peice.xPos+", "+peice.yPos+")");
                             System.out.println("turn = " + playerTurn);
@@ -844,7 +884,7 @@ public class Chessboard extends JFrame implements ActionListener  {
                                 squares[oldClickedRow][oldClickedCol].setBackground(c2);
                             }
 
-                            if (peice instanceof Pawn&& peice.COLOR.equals("w") &&peice.getyPos()==0){
+                            if (peice instanceof Pawn&& peice.COLOR.equals("w") &&peice.getyPos()==0){//check for promotion upon move
                                 String[] options = {"Queen", "Rook", "Bishop", "Knight"};
                                 int choice = JOptionPane.showOptionDialog(null, "Choose a piece to promote to:", "Pawn Promotion",
                                         JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
@@ -965,7 +1005,7 @@ public class Chessboard extends JFrame implements ActionListener  {
                                 }
                             } else if (peice instanceof Pawn&& peice.COLOR.equals("b") &&peice.getyPos()==7) {
                                 String[] options = {"Queen", "Rook", "Bishop", "Knight"};
-                                int choice = JOptionPane.showOptionDialog(null, "Choose a piece to promote to:", "Pawn Promotion",
+                                int choice = JOptionPane.showOptionDialog(null, "Choose a piece to promote to:", "Pawn Promotion",//option pop up gui
                                         JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
 
                                 // Processing the user's choice
@@ -1081,7 +1121,7 @@ public class Chessboard extends JFrame implements ActionListener  {
                                     break;
                                 }
                             }
-                            squares[oldClickedRow][oldClickedCol].setBorder(null);
+                            squares[oldClickedRow][oldClickedCol].setBorder(null);//resets colors and borders
                             squares[oldClickedRow][oldClickedCol].setBackground(null);
                             if ((oldClickedRow + oldClickedCol) % 2 == 0){
                                 squares[oldClickedRow][oldClickedCol].setBackground(c1);
@@ -1153,7 +1193,7 @@ public class Chessboard extends JFrame implements ActionListener  {
         boardState[7] = new String[]{wRook1.getcolor(), wKnight1.getcolor(), wBishop1.getcolor(), wQueen.getcolor(), wKing.getcolor(), wBishop2.getcolor(), wKnight2.getcolor(), wRook2.getcolor()};
     }
 
-    public Peice selectPiece(int x, int y){
+    public Peice selectPiece(int x, int y){//gets the piece on the x, y positions
         if (wRook1.getxPos()==x&&wRook1.getyPos()==y){
             return wRook1;
         } else if (wKnight1.getxPos()==x&&wKnight1.getyPos()==y){
@@ -1221,9 +1261,9 @@ public class Chessboard extends JFrame implements ActionListener  {
         }
         return null;
     }
-    public boolean WhiteIsCheck(){
+    public boolean WhiteIsCheck(){//Checks if back piece can valid capture the white king
         if (bPawn1.validCaptureCheck(bPawn1.xPos, bPawn1.yPos, wKing.xPos, wKing.yPos, boardState)){
-            attackingPeice = bPawn1;
+            attackingPeice = bPawn1;//sets it to the piece attacking
             return true;
         }else if (bPawn2.validCaptureCheck(bPawn2.xPos, bPawn2.yPos, wKing.xPos, wKing.yPos, boardState)){
             attackingPeice = bPawn2;
@@ -1273,7 +1313,7 @@ public class Chessboard extends JFrame implements ActionListener  {
         }
         return false;
     }
-    public boolean BlackIsCheck(){
+    public boolean BlackIsCheck(){//Checks if white piece can valid capture the black king
         if (wPawn1.validCaptureCheck(wPawn1.xPos, wPawn1.yPos, bKing.xPos, bKing.yPos, boardState)){
             attackingPeice = wPawn1;
             return true;
@@ -1325,7 +1365,7 @@ public class Chessboard extends JFrame implements ActionListener  {
         }
         return false;
     }
-    public int amountAttackedB (int x, int y) {
+    public int amountAttackedB (int x, int y) {//how many pieces are attaking the square input in paramenters
         int total = 0;
         if (bPawn1.validCapture(bPawn1.xPos, bPawn1.yPos, x, y, boardState)){
            total++;
@@ -1363,7 +1403,7 @@ public class Chessboard extends JFrame implements ActionListener  {
         return total;
     }
 
-    public boolean squareAttackedB(int x, int y){
+    public boolean squareAttackedB(int x, int y){//how many pieces are attaking the square input in paramenters
         if (bPawn1.validCapture(bPawn1.xPos, bPawn1.yPos, x, y, boardState)){
             return true;
         }else if (bPawn2.validCapture(bPawn2.xPos, bPawn2.yPos, x, y, boardState)){
@@ -1399,7 +1439,7 @@ public class Chessboard extends JFrame implements ActionListener  {
         }
         return false;
     }
-    public int amountAttackedW (int x, int y){
+    public int amountAttackedW (int x, int y){//how many pieces are attaking the square input in paramenters
         int total = 0;
         if (wPawn1.validCapture(wPawn1.xPos, wPawn1.yPos, x, y, boardState)){
             total++;
@@ -1434,7 +1474,7 @@ public class Chessboard extends JFrame implements ActionListener  {
         }
         return total;
     }
-    public boolean squareAttackedW(int x, int y){
+    public boolean squareAttackedW(int x, int y){//how many pieces are attaking the square input in paramenters
         if (wPawn1.validCapture(wPawn1.xPos, wPawn1.yPos, x, y, boardState)){
             return true;
         }else if (wPawn2.validCapture(wPawn2.xPos, wPawn2.yPos, x, y, boardState)){
@@ -1487,7 +1527,7 @@ public class Chessboard extends JFrame implements ActionListener  {
             }
         }
     }
-    public void setCastleError(){
+    public void setCastleError(){//sets error background
         if (playerTurn.equals("w")){
             if (BlackIsCheck()){
                 tempColor1=squares[bKing.yPos][bKing.xPos].getBackground();
@@ -1506,32 +1546,32 @@ public class Chessboard extends JFrame implements ActionListener  {
         }
     }
     public boolean WhiteCheckMate(){
-        if(WhiteIsCheck()){//much better
+        if(WhiteIsCheck()){//Only goes into the checkmate detection if the piece is under check
             emptyX = emptyX();
             emptyY = emptyY();
-            for (int x = 0; x<8 ; x++){
+            for (int x = 0; x<8 ; x++){//logic is to use 8x8 for loops to and move everypiece to everysquare if the can then if it is still under check move them back
                 for (int y = 0; y<8; y++){
                     if((wKing.validMoveCheckMate(wKing.xPos, wKing.yPos, y, x, boardState)&&(!squareAttackedB(y,x)))||((wKing.validCapture(wKing.xPos, wKing.yPos, y, x, boardState)&&((boardState[x][y].equals("♖"))||(boardState[x][y].equals("♘"))||(boardState[x][y].equals("♗"))||(boardState[x][y].equals("♕"))||(boardState[x][y].equals("♙")))&&amountAttackedB(y,x)==1)&&(!squareAttackedW(attackingPeice.xPos,attackingPeice.yPos)))||(amountAttackedW(attackingPeice.xPos,attackingPeice.yPos)>=1)&&(amountAttackedB(attackingPeice.xPos,attackingPeice.yPos)>=1)){
-
+                        //this one is checking if the king can have a move to get out of the check and that square is not attacked, Then if the king can capture another piece to get out of checkmate, and last condition is if you have another piece that can capture the attacking piece
                         return true;
                     }else {
                         deletedPeice=selectPiece(y,x);
-                        if  (wRook1.validMoveCheckMate(wRook1.xPos, wRook1.yPos, x, y, boardState)&&wRook1.color!=""){//make sure the square to move is empty so no capture
-                            checkmateTempx=wRook1.xPos;
-                            checkmateTempy=wRook1.yPos;
-                            updateBoardState(x, y,wRook1.xPos, wRook1.yPos, wRook1);
-                            if (WhiteIsCheck()){
+                        if  (wRook1.validMoveCheckMate(wRook1.xPos, wRook1.yPos, x, y, boardState)&&wRook1.color!=""){//moves the rook to the position if it is valid
+                            checkmateTempx=wRook1.xPos;//stores origninal x pos
+                            checkmateTempy=wRook1.yPos;//stores origninal y pos
+                            updateBoardState(x, y,wRook1.xPos, wRook1.yPos, wRook1);//moves rook there
+                            if (WhiteIsCheck()){//if it is still check move it back
                                 updateBoardState(checkmateTempx, checkmateTempy, x, y,  wRook1);
                                 updateBoardState(y, x, emptyX, emptyY, deletedPeice);
                             }
-                            else {
+                            else {//move it back and return true for true which means is not checkmate because a move can be played to block
                                 updateBoardState(checkmateTempx, checkmateTempy, x, y,  wRook1);
                                 updateBoardState(y, x, emptyX, emptyY, deletedPeice);
                                 return true;
                             }
                         }
 
-                        if  (wRook2.validMoveCheckMate(wRook2.xPos, wRook2.yPos, x, y, boardState)&&wRook2.color!="") {
+                        if  (wRook2.validMoveCheckMate(wRook2.xPos, wRook2.yPos, x, y, boardState)&&wRook2.color!="") {//does the same thing for all other pieces
                             checkmateTempx = wRook2.xPos;
                             checkmateTempy = wRook2.yPos;
                             updateBoardState(x, y,wRook2.xPos, wRook2.yPos, wRook2);
@@ -1724,7 +1764,7 @@ public class Chessboard extends JFrame implements ActionListener  {
     }
     public boolean BlackCheckMate(){
 
-        if(BlackIsCheck()){//much better
+        if(BlackIsCheck()){//same logic as the above WhiteCheckMate
             emptyX = emptyX();
             emptyY = emptyY();
             for (int x = 0; x<8 ; x++){
@@ -1940,7 +1980,7 @@ public class Chessboard extends JFrame implements ActionListener  {
         }
         return false;
     }
-    public int emptyX(){
+    public int emptyX(){//finds the first empty x pos
         for (int i =0; i<8; i++){
             for (int j=0; j<8; j++){
                 if (boardState[i][j].isEmpty()){
@@ -1950,7 +1990,7 @@ public class Chessboard extends JFrame implements ActionListener  {
         }
         return -1;
     }
-    public int emptyY(){
+    public int emptyY(){//finds the first empty y pos
         for (int i =0; i<8; i++){
             for (int j=0; j<8; j++){
                 if (boardState[i][j].isEmpty()){
