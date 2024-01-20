@@ -29,7 +29,21 @@ public class Pawn extends Peice {
             return false;
         }
     }
+
     public boolean validCapture(int dX, int dY, int cX, int cY, String board[][]) {
-        return (cY - dY == 1 || cY - dY == -1) && (cX - dX == 1 || cX - dX == -1);
+        if ((cY - dY == 1 &&(cX - dX == 1 || cX - dX == -1) )&&COLOR.equals("b")){
+            return true;
+        }else if ((cY - dY == -1 &&(cX - dX == 1 || cX - dX == -1) )&&COLOR.equals("w")){
+            return true;
+        }
+        return  false;
+    }
+    public boolean validCaptureCheck(int dX, int dY, int cX, int cY, String board[][]) {
+        if ((cY - dY == 1 &&(cX - dX == 1 || cX - dX == -1) )&&COLOR.equals("b")){
+            return true;
+        }else if ((cY - dY == -1 &&(cX - dX == 1 || cX - dX == -1) )&&COLOR.equals("w")){
+            return true;
+        }
+        return  false;
     }
 }
