@@ -9,21 +9,23 @@ public class StartMenus extends JFrame implements ActionListener {
     JLabel startMenuBackground = new JLabel();
     JButton startTTTGameButton = new JButton();
     JButton startChessGameButton = new JButton();
-    ImageIcon iconImg = new ImageIcon("Chess/assets/AppIcon.png");
+    JButton startGameReviewButton = new JButton();
 
     public StartMenus() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         setBounds(0, 0, 813, 837);
-
-        setIconImage(iconImg.getImage());
-        startChessGameButton.setBounds(200, 532, 400, 133);
+        startGameReviewButton.setBounds(200, 320, 400, 133);
+        startGameReviewButton.setText("Game Review");
+        startGameReviewButton.addActionListener(this);
+        add(startGameReviewButton);
+        startChessGameButton.setBounds(200, 100, 400, 133);
         startMenuBackground.setText("  Board Master");
         startChessGameButton.setText("Chess");
         startTTTGameButton.setText("Tic Tac Toe");
         add(startChessGameButton);
         startChessGameButton.addActionListener(this);
-        startTTTGameButton.setBounds(200, 266, 400, 133);
+        startTTTGameButton.setBounds(200, 532, 400, 133);
 
 
 
@@ -44,6 +46,10 @@ public class StartMenus extends JFrame implements ActionListener {
 
         if (e.getSource() == startTTTGameButton) {
             new TicTacToe();
+        }
+
+        if (e.getSource() == startGameReviewButton) {
+            new ChessReview();
         }
 
     }
