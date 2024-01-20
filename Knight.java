@@ -1,4 +1,3 @@
-
 import java.lang.Math;
 
 public class Knight extends Peice {
@@ -6,6 +5,54 @@ public class Knight extends Peice {
         super("Knight", c, n, x, y, COLOR);
     }
 
+    public boolean validMoveCheckMate(int dX, int dY, int cX, int cY, String board[][]) {
+        if (!board[cY][cX].isEmpty()){
+            return false;
+        }
+        if (Math.abs(cX - dX) == 1 && Math.abs(cY - dY) == 2) {
+            super.xPos = dX;
+            super.yPos = dY;
+            return true;
+        } else if (Math.abs(cX - dX) == 2 && Math.abs(cY - dY) == 1) {
+            super.xPos = dX;
+            super.yPos = dY;
+            return true;
+        } else if (Math.abs(cX + dX) == 1 && Math.abs(cY + dY) == 2) {
+            super.xPos = dX;
+            super.yPos = dY;
+            return true;
+        } else if (Math.abs(cX + dX) == 2 && Math.abs(cY + dY) == 1) {
+            super.xPos = dX;
+            super.yPos = dY;
+            return true;
+        } else {
+            return false;
+        }
+    }
+    public boolean validCaptureCheck(int dX, int dY, int cX, int cY, String board[][]) {
+        if (!board[cY][cX].isEmpty()){
+            return false;
+        }
+        if (Math.abs(cX - dX) == 1 && Math.abs(cY - dY) == 2) {
+            super.xPos = dX;
+            super.yPos = dY;
+            return true;
+        } else if (Math.abs(cX - dX) == 2 && Math.abs(cY - dY) == 1) {
+            super.xPos = dX;
+            super.yPos = dY;
+            return true;
+        } else if (Math.abs(cX + dX) == 1 && Math.abs(cY + dY) == 2) {
+            super.xPos = dX;
+            super.yPos = dY;
+            return true;
+        } else if (Math.abs(cX + dX) == 2 && Math.abs(cY + dY) == 1) {
+            super.xPos = dX;
+            super.yPos = dY;
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     @Override
     public boolean validMove(int dX, int dY, int cX, int cY, String board[][]) {
