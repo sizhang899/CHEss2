@@ -39,6 +39,13 @@ public class King extends Peice {
     public boolean validCapture(int dX, int dY, int cX, int cY, String[][] board) {
         return validMove(dX, dY, cX, cY, board);
     }
+
+    @Override
+    public boolean validCaptureCheck(int dX, int dY, int cX, int cY, String[][] board) {
+        return validMove(dX, dY, cX, cY, board);
+
+    }
+
     public boolean validCastle(int dX, int dY, int cX, int cY, String[][] board){
         if (!kingHasmoved){
             if ((cX==2)&&(cY==0)&&(dX==4)&&(dY==0)&&(COLOR.equals("b"))&&(board[0][0].equals("♜"))) {
